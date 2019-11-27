@@ -1,9 +1,9 @@
 package config
 
 import (
-	"CRUD/models/posts"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"golang_side_project_crud_website/models/posts"
 	"log"
 	"time"
 )

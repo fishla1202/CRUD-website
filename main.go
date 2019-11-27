@@ -1,8 +1,8 @@
 package main
 
 import (
-	"CRUD/config"
-	"CRUD/routes"
+	"golang_side_project_crud_website/config"
+	"golang_side_project_crud_website/routes"
 	"log"
 	"net/http"
 )

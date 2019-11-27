@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"CRUD/models/posts"
+	"golang_side_project_crud_website/models/posts"
 	"log"
 	"net/http"
 )

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"CRUD/controller"
+	"golang_side_project_crud_website/controller"
 	"net/http"
 )
 
