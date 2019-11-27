@@ -2,15 +2,20 @@ package main
 
 import (
 	"CRUD/config"
-	"CRUD/models/migrations"
-	"CRUD/router"
+	"CRUD/routes"
 	"log"
 	"net/http"
 )
 
 func main() {
-	router.Main()
-	db := config.DatabaseInit()
-	migrations.InitPostTable(db)
+
+	// open all route
+	routes.Main()
+
+	// open db connection pool and run migration files
+	db := config.OpenDatabaseConnectionPool()
+	config.MigrateAndPassDatabaseConnectionToModels(db)
+
+	// open server
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
