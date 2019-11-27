@@ -21,7 +21,7 @@ func IndexHandle(w http.ResponseWriter, r *http.Request) {
 
 	pageContent := PageContent{PageTitle: "FishLa Blog"}
 
-	err = tmpl.Execute(w, pageContent)
+	err = tmpl.Execute(w, &pageContent)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
