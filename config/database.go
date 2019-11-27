@@ -10,6 +10,7 @@ import (
 
 
 func OpenDatabaseConnectionPool() *gorm.DB{
+	// TODO: use os.env
 	db, err := gorm.Open(
 		"mysql", "root:root@tcp(127.0.0.1:3306)/golang?charset=utf8")
 	if err != nil { log.Fatal("connection error:", err) }
