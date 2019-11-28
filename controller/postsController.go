@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-
+// TODO: post list page
 func PostIndex(w http.ResponseWriter, r *http.Request) {
 
 }
