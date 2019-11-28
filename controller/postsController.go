@@ -2,13 +2,23 @@ package controller
 
 import (
 	"golang_side_project_crud_website/models/posts"
+	"golang_side_project_crud_website/render_templates"
 	"log"
 	"net/http"
+	"path"
 )
 
 // TODO: post list page
 func PostIndex(w http.ResponseWriter, r *http.Request) {
+	allPosts := posts.FindAllPosts()
 
+	pageContent := PageContent{
+		PageTitle: "Post List",
+		PageQuery: allPosts,
+	}
+
+	index := path.Join("templates/posts", "index.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
 }
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {

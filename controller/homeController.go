@@ -1,28 +1,22 @@
 package controller
 
 import (
-	"html/template"
+	"github.com/jinzhu/gorm"
+	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
 )
 
 type PageContent struct {
 	PageTitle string
+	PageQuery *gorm.DB
 }
 
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
-	layout := path.Join("templates", "layout.html")
-	index := path.Join("templates", "index.html")
-	tmpl, err := template.ParseFiles(layout, index)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
 	pageContent := PageContent{PageTitle: "FishLa Blog"}
 
-	err = tmpl.Execute(w, &pageContent)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	index := path.Join("templates", "index.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+
 }

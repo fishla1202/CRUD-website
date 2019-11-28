@@ -20,3 +20,8 @@ func InsertPost(title string, content string) {
 	post := Post{Title: title, Content: content}
 	DB.Create(&post)
 }
+
+func FindAllPosts() *gorm.DB{
+	res := DB.Find(&[]Post{})
+	return res
+}
