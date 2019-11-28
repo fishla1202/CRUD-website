@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/routes"
 	"log"
@@ -8,6 +9,12 @@ import (
 )
 
 func main() {
+
+	// load the project .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	// open all route
 	routes.Main()

@@ -5,14 +5,16 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"golang_side_project_crud_website/models/posts"
 	"log"
+	"os"
 	"time"
 )
 
 
 func OpenDatabaseConnectionPool() *gorm.DB{
-	// TODO: use os.env
+
+	dbConnectionKeyword := os.Getenv("DB_CONNECTION_KEYWORD")
 	db, err := gorm.Open(
-		"mysql", "root:root@tcp(127.0.0.1:3306)/golang?charset=utf8")
+		"mysql", dbConnectionKeyword)
 	if err != nil { log.Fatal("connection error:", err) }
 
 	db.DB()
