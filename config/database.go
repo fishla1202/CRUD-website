@@ -16,7 +16,7 @@ func OpenDatabaseConnectionPool() *gorm.DB{
 	db, err := gorm.Open(
 		"mysql", dbConnectionKeyword)
 	if err != nil { log.Fatal("connection error:", err) }
-
+	db.LogMode(true)
 	db.DB()
 	err = db.DB().Ping()
 	if err != nil {log.Fatal("connection error:", err) }

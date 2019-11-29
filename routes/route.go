@@ -7,6 +7,9 @@ import (
 
 func Main() {
 	http.HandleFunc("/", controller.IndexHandle)
+
+	// post
 	http.HandleFunc("/create-post", controller.CreatePost)
+	http.HandleFunc("/post-list", controller.PostIndex)
 }
 

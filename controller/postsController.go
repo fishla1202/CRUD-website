@@ -8,7 +8,6 @@ import (
 	"path"
 )
 
-// TODO: post list page
 func PostIndex(w http.ResponseWriter, r *http.Request) {
 	allPosts := posts.FindAllPosts()
 

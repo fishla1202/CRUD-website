@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -21,7 +22,10 @@ func InsertPost(title string, content string) {
 	DB.Create(&post)
 }
 
+// TODO: show the query res
 func FindAllPosts() *gorm.DB{
-	res := DB.Find(&[]Post{})
+	var posts []Post
+	res := DB.Find(&posts)
+	fmt.Println(DB)
 	return res
 }
