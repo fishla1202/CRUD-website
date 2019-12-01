@@ -1,0 +1,4 @@
+godotenv
+gorm
+go-sql-driver
+gorilla mux
