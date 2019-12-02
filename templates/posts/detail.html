@@ -1,4 +1,5 @@
 {{define "content"}}
-        {{.PageQuery.Value.Title}}
-        {{.PageQuery.Value.Content}}
+        <h2>{{.PageQuery.Value.Title}}</h2>
+        <p>{{.PageQuery.Value.Content}}</p>
+        <a href="/post/edit/{{.PageQuery.Value.ID}}/" class="btn btn-primary mt-3">Edit Post</a>
 {{end}}

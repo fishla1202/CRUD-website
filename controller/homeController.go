@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/jinzhu/gorm"
+	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
@@ -14,7 +15,12 @@ type PageContent struct {
 
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
 
-	pageContent := PageContent{PageTitle: "FishLa Blog"}
+	allPosts := posts.FindAllPosts()
+
+	pageContent := PageContent{
+		PageTitle: "FishLa",
+		PageQuery: allPosts,
+	}
 
 	index := path.Join("templates", "index.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)

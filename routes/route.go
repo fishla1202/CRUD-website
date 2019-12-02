@@ -11,9 +11,10 @@ func Main() {
 	r.HandleFunc("/", controller.IndexHandle).Methods("GET")
 
 	// post
-	r.HandleFunc("/create-post", controller.CreatePost).Methods("POST")
-	r.HandleFunc("/post-list", controller.PostIndex).Methods("GET")
-	r.HandleFunc("/post/{id}", controller.PostDetail).Methods("GET")
+	r.HandleFunc("/create-post/", controller.CreatePost)
+	r.HandleFunc("/post/{id:[0-9]+}/", controller.PostDetail).Methods("GET")
+	r.HandleFunc("/post/delete/{id:[0-9]+}/", controller.DeletePost).Methods("GET")
+	r.HandleFunc("/post/edit/{id:[0-9]+}/", controller.EditPost)
 
 	http.Handle("/", r)
 }

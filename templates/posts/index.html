@@ -1,7 +1,0 @@
-{{define "content"}}
-    <div class="list-group">
-        {{range $k, $val := .PageQuery.Value}}
-            <a href="/post/{{$val.ID}}" class="list-group-item list-group-item-action"> {{$val.Title}}</a>
-        {{end}}
-    </div>
-{{end}}

@@ -1,0 +1,16 @@
+{{define "content"}}
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="postTitle">Title</label>
+                <input type="text" class="form-control" name="title" id="postTitle" placeholder="Post title" value="{{.PageQuery.Value.Title}}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="postContent">Content</label>
+            <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required>{{.PageQuery.Value.Content}}</textarea>
+            <input type="hidden" value="{{.PageQuery.Value.ID}}" name="id">
+        </div>
+        <button class="btn btn-success" type="submit">Update</button>
+    </form>
+{{end}}
