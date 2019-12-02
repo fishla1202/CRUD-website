@@ -9,7 +9,6 @@ import (
 	"path"
 )
 
-// TODO: 修改刪除 post
 
 func PostDetail(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
