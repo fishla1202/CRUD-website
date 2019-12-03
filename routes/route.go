@@ -16,6 +16,9 @@ func Main() {
 	r.HandleFunc("/post/delete/{id:[0-9]+}/", controller.DeletePost).Methods("GET")
 	r.HandleFunc("/post/edit/{id:[0-9]+}/", controller.EditPost)
 
+	// user
+	r.HandleFunc("/user/sing-up/", controller.CreateUser)
+
 	http.Handle("/", r)
 }
 

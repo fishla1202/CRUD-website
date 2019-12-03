@@ -1,0 +1,18 @@
+{{define "content"}}
+    <form>
+    <div class="form-group">
+        <label for="user_email">Email address</label>
+        <input type="email" class="form-control" id="user_email" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="user_pw">Password</label>
+        <input type="password" class="form-control" id="user_pw">
+    </div>
+    <div class="form-group">
+        <label for="confirm_pw">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm_pw">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{{end}}
