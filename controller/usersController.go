@@ -8,7 +8,7 @@ import (
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	pageContent := PageContent{
-		PageTitle: "Sing up",
+		PageTitle: "Sign up",
 		PageQuery: nil,
 	}
 	index := path.Join("templates/users", "create.html")
