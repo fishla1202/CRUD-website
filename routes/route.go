@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/controller"
 	"net/http"
+	"path"
 )
 
 func Main() {
@@ -19,6 +20,12 @@ func Main() {
 	// user
 	r.HandleFunc("/user/sign-up/", controller.CreateUser)
 
+	// load the static file
+	r.HandleFunc("/public/firebase_config.js", SendJqueryJs)
+
 	http.Handle("/", r)
 }
 
+func SendJqueryJs(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, path.Join("static", "firebase_config.js"))
+}

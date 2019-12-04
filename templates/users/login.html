@@ -1,0 +1,22 @@
+{{define "style"}}
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+{{end}}
+{{define "content"}}
+    <div id="firebaseui-auth-container"></div>
+{{end}}
+
+{{define "script"}}
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <script>
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start('#firebaseui-auth-container', {
+            signInOptions: [
+                firebase.auth.EmailAuthProvider.PROVIDER_ID
+            ],
+            // Other config options...
+        });
+    </script>
+{{end}}
+
+{{/*// TODO: add firebase authentication sign in with email password*/}}
+{{/*// https://firebase.google.com/docs/auth/web/firebaseui?authuser=1*/}}
