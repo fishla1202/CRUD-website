@@ -27,5 +27,6 @@ func Main() {
 }
 
 func SendJqueryJs(w http.ResponseWriter, r *http.Request) {
+	/*TODO: add static dir and add firebase_config.js file*/
 	http.ServeFile(w, r, path.Join("static", "firebase_config.js"))
 }
