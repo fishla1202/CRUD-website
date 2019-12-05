@@ -23,6 +23,7 @@ type User struct {
 	Uid string `gorm:"unique;not null;index:uid"`
 	Posts []posts.Post
 	UpdatedAt *time.Time
+	LastLoginAt *time.Time
 	CreatedAt *time.Time
 }
 
