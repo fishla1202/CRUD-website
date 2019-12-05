@@ -1,14 +1,12 @@
 package users
 
-// TODO: add firebase sign up with email password
-
-// https://firebase.google.com/docs/admin/setup?authuser=1
-// https://firebase.google.com/docs/auth/admin/manage-users?authuser=1
-
 import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"github.com/jinzhu/gorm"
+	"golang_side_project_crud_website/models/posts"
 	"path"
+	"time"
 
 	//"firebase.google.com/go/auth"
 	"fmt"
@@ -18,8 +16,29 @@ import (
 	"os"
 )
 
+type User struct {
+	ID int64 `gorm:"PRIMARY_KEY"`
+	Name string `gorm:"not null"`
+	Email string `gorm:"not null"`
+	Uid string `gorm:"unique;not null;index:uid"`
+	Posts []posts.Post
+	UpdatedAt *time.Time
+	CreatedAt *time.Time
+}
+
+var DB *gorm.DB
+
+func InitUserTable() {
+	DB.AutoMigrate(&User{})
+}
+
+func InsertUser(name string, email string, uid string) {
+	user := User{Name: name, Email: email, Uid: uid}
+	DB.Create(&user)
+}
+
 func CreateUser(userName string, userEmail string, userPwd string) string{
-	opt := option.WithCredentialsFile(path.Join(os.Getenv("FIREBASE_KEY_PATH")))
+	opt := option.WithCredentialsFile(path.Join("secret", os.Getenv("FIREBASE_KEY_PATH")))
 	ctx := context.Background()
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
@@ -42,6 +61,7 @@ func CreateUser(userName string, userEmail string, userPwd string) string{
 		log.Fatalf("error creating user: %v\n", err)
 	}
 	log.Printf("Successfully created user: %v\n", u)
+	InsertUser(userName, userEmail, u.UID)
 	return u.UID
 }
 

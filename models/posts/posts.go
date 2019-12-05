@@ -9,6 +9,7 @@ type Post struct {
 	ID int64 `gorm:"PRIMARY_KEY"`
 	Title string `gorm:"not null"`
 	Content string `sql:"type:text;"gorm:"not null"`
+	UserID  uint
 	UpdatedAt *time.Time
 	CreatedAt *time.Time
 }
