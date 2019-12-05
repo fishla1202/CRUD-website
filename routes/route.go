@@ -19,6 +19,7 @@ func Main() {
 
 	// user
 	r.HandleFunc("/user/sign-up/", controller.CreateUser)
+	r.HandleFunc("/user/sign-in/", controller.LoginUser)
 
 	// load the static file
 	r.HandleFunc("/public/firebase_config.js", SendJqueryJs)

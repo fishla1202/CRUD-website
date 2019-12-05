@@ -21,12 +21,21 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 		if err != nil { log.Fatal(err)}
 
+	// TODO: 判斷使用者重複註冊問題
 		uid := users.CreateUser(
 			r.Form["userName"][0], r.Form["userEmail"][0], r.Form["userPwd"][0])
 		fmt.Println(uid)
-		// TODO: get the uid and store in session when user create post add the uid to it
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	pageContent := PageContent{
+		PageTitle: "Sign in",
+		PageQuery: nil,
+	}
+	index := path.Join("templates/users", "login.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
 }
