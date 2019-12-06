@@ -19,11 +19,10 @@ import (
 type User struct {
 	ID int64 `gorm:"PRIMARY_KEY"`
 	Name string `gorm:"not null"`
-	Email string `gorm:"not null"`
-	Uid string `gorm:"unique;not null;index:uid"`
+	Email string `gorm:"not null;index:email_idx"`
+	Uid string `gorm:"unique;not null;index:uid_idx"`
 	Posts []posts.Post
 	UpdatedAt *time.Time
-	LastLoginAt *time.Time
 	CreatedAt *time.Time
 }
 
