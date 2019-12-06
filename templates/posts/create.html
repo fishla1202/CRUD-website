@@ -10,6 +10,26 @@
             <label for="postContent">Content</label>
             <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required></textarea>
         </div>
+        <input type="hidden" class="form-control" name="title" id="uid">
         <button class="btn btn-success" type="submit">Create</button>
     </form>
+{{end}}
+
+{{define "script"}}
+
+<script>
+    // TODO: 判斷使用者是否登入
+    $(document).ready(function () {
+        firebase.auth().onAuthStateChanged(function(user) {
+
+            if (user) {
+                $("#uid").value(user.uid);
+            } else {
+                // No user is signed in.
+                window.location = "/";
+            }
+        })
+    });
+</script>
+
 {{end}}
