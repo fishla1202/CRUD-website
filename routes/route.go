@@ -9,20 +9,22 @@ import (
 
 func Main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", controller.IndexHandle).Methods("GET")
+	r.HandleFunc("/", controller.IndexHandle).Methods("GET").Name("home")
 
 	// post
-	r.HandleFunc("/create-post/", controller.CreatePost)
-	r.HandleFunc("/post/{id:[0-9]+}/", controller.PostDetail).Methods("GET")
-	r.HandleFunc("/post/delete/{id:[0-9]+}/", controller.DeletePost).Methods("GET")
-	r.HandleFunc("/post/edit/{id:[0-9]+}/", controller.EditPost)
+	p := r.PathPrefix("/post").Subrouter()
+	p.HandleFunc("/create/", controller.CreatePost).Methods("GET", "POST").Name("createPost")
+	p.HandleFunc("/{id:[0-9]+}/", controller.PostDetail).Methods("GET").Name("postDetail")
+	p.HandleFunc("/delete/{id:[0-9]+}/", controller.DeletePost).Methods("GET").Name("deletePost")
+	p.HandleFunc("/edit/{id:[0-9]+}/", controller.EditPost).Methods("GET", "POST").Name("editPost")
 
 	// user
-	r.HandleFunc("/user/sign-up/", controller.CreateUser)
-	r.HandleFunc("/user/sign-in/", controller.LoginUser)
+	u := r.PathPrefix("/user").Subrouter()
+	u.HandleFunc("/sign-up/", controller.CreateUser).Methods("GET", "POST").Name("createUser")
+	u.HandleFunc("/sign-in/", controller.LoginUser).Name("loginUser")
 
 	// load the static file
-	r.HandleFunc("/public/firebase_config.js", SendJqueryJs)
+	r.HandleFunc("/public/firebase_config.js", SendJqueryJs).Methods("GET").Name("firebaseConfig")
 
 	http.Handle("/", r)
 }
