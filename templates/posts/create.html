@@ -23,7 +23,7 @@
         firebase.auth().onAuthStateChanged(function(user) {
 
             if (user) {
-                $("#uid").value(user.uid);
+                $("#uid").val(user.uid);
             } else {
                 // No user is signed in.
                 window.location = "/";
