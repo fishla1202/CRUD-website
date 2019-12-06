@@ -7,5 +7,34 @@
         </li>
         {{end}}
     </div>
-    <a href="/create-post/" class="btn btn-primary mt-3">Create Post</a>
+    <a href="/create-post/" class="btn btn-primary mt-3 d-none" id="createPost">Create Post</a>
+    <a href="/user/sign-in/" id="signIn" class="btn btn-primary mt-3 d-none">Sign In</a>
+    <a href="#" id="signOut" class="btn btn-primary mt-3 d-none">Sign Out</a>
+{{end}}
+
+{{define "script"}}
+<script>
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            $("#signOut").removeClass("d-none");
+            $("#createPost").removeClass("d-none");
+            alert(user.uid)
+        }else {
+            $("#signIn").removeClass("d-none");
+            $("#signOut").addClass("d-none");
+            $("#createPost").addClass("d-none");
+        }
+    });
+
+    $("#signOut").click(function (event) {
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            alert("hi")
+        }).catch(function(error) {
+            // An error happened.
+        });
+    })
+</script>
+
 {{end}}
