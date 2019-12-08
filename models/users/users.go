@@ -17,7 +17,7 @@ import (
 )
 
 type User struct {
-	ID int64 `gorm:"PRIMARY_KEY"`
+	ID uint `gorm:"PRIMARY_KEY"`
 	Name string `gorm:"not null"`
 	Email string `gorm:"not null;index:email_idx"`
 	Uid string `gorm:"unique;not null;index:uid_idx"`
@@ -65,10 +65,10 @@ func CreateUser(userName string, userEmail string, userPwd string) string{
 	return u.UID
 }
 
-func FindUserByUID(uid string) {
-	//TODO: 查詢使用用者id 回傳
-	//var user User
-	//user := DB.Where("uid = ?", uid).Select("id").First(&user)
+func FindUserByUID(uid string) uint{
+	var user User
+	userId := DB.Select("id").Where("uid = ?", uid).First(&user)
+	return userId.Value.(*User).ID
 }
 
 

@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/models/posts"
+	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
 	"log"
 	"net/http"
@@ -34,12 +35,13 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		}else {
 			// TODO: 查詢回來的user id 傳入post 查看看有沒有其他方法可以得知目前使用者 因為現在前端是用firebase驗證 session不知道怎麼處理
 			
-			//user_id = users.
-			//post = map[string]string {
-			//	"title": r.Form["title"][0],
-			//	"content": r.Form["content"][0],
-			//	"uid": r.Form["uid"][0]}
-			posts.InsertPost(post)
+			userId := users.FindUserByUID(r.Form["uid"][0])
+			post := posts.Post{
+				Title:   r.Form["title"][0],
+				Content: r.Form["content"][0],
+				UserID:  userId,
+			}
+			posts.InsertPost(&post)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
 	}else if r.Method == "GET" {

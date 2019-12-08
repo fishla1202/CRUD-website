@@ -1,5 +1,5 @@
 {{define "content"}}
-    <form action="/create-post/" method="POST">
+    <form method="POST">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="postTitle">Title</label>
@@ -10,7 +10,7 @@
             <label for="postContent">Content</label>
             <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required></textarea>
         </div>
-        <input type="hidden" class="form-control" name="title" id="uid">
+        <input type="hidden" class="form-control" name="uid" id="uid">
         <button class="btn btn-success" type="submit">Create</button>
     </form>
 {{end}}

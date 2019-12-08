@@ -6,7 +6,7 @@ import (
 )
 
 type Post struct {
-	ID int64 `gorm:"PRIMARY_KEY"`
+	ID uint `gorm:"PRIMARY_KEY"`
 	Title string `gorm:"not null"`
 	Content string `sql:"type:text;"gorm:"not null"`
 	UserID  uint
@@ -20,9 +20,8 @@ func InitPostTable() {
 	DB.AutoMigrate(&Post{})
 }
 
-func InsertPost(postContent interface{}) {
-	post := Post{Title: postContent.title, Content: postContent.content, UserID: postContent.id}
-	DB.Create(&post)
+func InsertPost(postContent *Post) {
+	DB.Create(postContent)
 }
 
 func FindAllPosts() *gorm.DB{
