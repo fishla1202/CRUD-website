@@ -65,4 +65,10 @@ func CreateUser(userName string, userEmail string, userPwd string) string{
 	return u.UID
 }
 
+func FindUserByUID(uid string) {
+	//TODO: 查詢使用用者id 回傳
+	//var user User
+	//user := DB.Where("uid = ?", uid).Select("id").First(&user)
+}
+
 

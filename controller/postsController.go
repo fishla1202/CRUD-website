@@ -29,12 +29,17 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { log.Fatal(err)}
-		if r.Form["content"] == nil || r.Form["title"] == nil {
+		if r.Form["content"] == nil || r.Form["title"] == nil || r.Form["uid"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else {
-			title := r.Form["title"][0]
-			content := r.Form["content"][0]
-			posts.InsertPost(title, content)
+			// TODO: 查詢回來的user id 傳入post 查看看有沒有其他方法可以得知目前使用者 因為現在前端是用firebase驗證 session不知道怎麼處理
+			
+			//user_id = users.
+			//post = map[string]string {
+			//	"title": r.Form["title"][0],
+			//	"content": r.Form["content"][0],
+			//	"uid": r.Form["uid"][0]}
+			posts.InsertPost(post)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
 	}else if r.Method == "GET" {

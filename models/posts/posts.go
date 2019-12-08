@@ -20,8 +20,8 @@ func InitPostTable() {
 	DB.AutoMigrate(&Post{})
 }
 
-func InsertPost(title string, content string) {
-	post := Post{Title: title, Content: content}
+func InsertPost(postContent interface{}) {
+	post := Post{Title: postContent.title, Content: postContent.content, UserID: postContent.id}
 	DB.Create(&post)
 }
 
