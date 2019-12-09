@@ -5,7 +5,6 @@ import (
 	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
-	"log"
 	"net/http"
 	"path"
 )
@@ -29,7 +28,7 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		err := r.ParseForm()
-		if err != nil { log.Fatal(err)}
+		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
 		if r.Form["content"] == nil || r.Form["title"] == nil || r.Form["uid"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else {
@@ -57,7 +56,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
-		if err != nil { log.Fatal(err)}
+		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
 		if r.Form["content"] == nil || r.Form["title"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else {
