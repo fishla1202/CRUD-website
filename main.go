@@ -9,7 +9,6 @@ import (
 )
 
 
-// TODO: authentication
 func main() {
 
 	// load the project .env file
