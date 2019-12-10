@@ -3,17 +3,15 @@ package users
 import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/jinzhu/gorm"
-	"golang_side_project_crud_website/models/posts"
-	"path"
-	"time"
-
-	//"firebase.google.com/go/auth"
 	"fmt"
+	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
+	"golang_side_project_crud_website/models/posts"
 	"google.golang.org/api/option"
 	"log"
 	"os"
+	"path"
+	"time"
 )
 
 type User struct {

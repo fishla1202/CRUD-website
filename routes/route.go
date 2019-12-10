@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gorilla/mux"
+	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/controller"
 	"net/http"
 	"path"
@@ -10,6 +11,9 @@ import (
 func Main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", controller.IndexHandle).Methods("GET").Name("home")
+
+	// set user login session
+	r.HandleFunc("/sessionLogin/", config.SetLoginSession).Methods("POST").Name("setLoginSession")
 
 	// post
 	p := r.PathPrefix("/post").Subrouter()

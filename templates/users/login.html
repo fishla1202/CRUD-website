@@ -14,6 +14,21 @@
 
 {{define "script"}}
     <script>
+        function postIdTokenToSessionLogin(url, idToken) {
+            $.ajax({
+                url: "127.0.0.1:8000" + url,
+                type: 'POST',
+                data: {
+                    idToken: idToken
+                },
+                success: function(response) {
+                },
+                error: function(xhr) {
+                    alert(xhr.status);
+                }
+            });
+        }
+
         $( "#signInUserForm" ).submit(function( event ) {
             event.preventDefault();
             const user_email = $('#userEmail').val();
@@ -31,7 +46,7 @@
                     // alert(idToken);
                     // const csrfToken = getCookie('csrfToken');
                     // TODO: 定義一個url 接收 uid 寫入session
-                    return postIdTokenToSessionLogin('/sessionLogin', idToken, csrfToken);
+                    return postIdTokenToSessionLogin('/sessionLogin/', idToken);
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.

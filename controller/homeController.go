@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/render_templates"
-	//"github.com/gorilla/sessions"
 	"log"
+
 	"net/http"
 	"path"
 )
@@ -17,20 +17,19 @@ type PageContent struct {
 
 // TODO: 將login firebase 拿到的uid 存在session裡
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		allPosts := posts.FindAllPosts()
 
-		pageContent := PageContent{
-			PageTitle: "FishLa",
-			PageQuery: allPosts,
-		}
+	cookie, err := r.Cookie("session")
+	if cookie != nil {log.Fatal(123)}
+	if err != nil {log.Fatal(err)}
+	allPosts := posts.FindAllPosts()
 
-		index := path.Join("templates", "index.html")
-		render_templates.ReturnRenderTemplate(w, index, &pageContent)
-	}else if r.Method == "POST" {
-		err := r.ParseForm()
-		if err != nil {log.Fatal(err)}
-		log.Fatal(r.Form)
+	pageContent := PageContent{
+		PageTitle: "FishLa",
+		PageQuery: allPosts,
 	}
+
+	index := path.Join("templates", "index.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+
 
 }
