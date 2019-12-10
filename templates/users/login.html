@@ -1,22 +1,44 @@
-{{define "style"}}
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-{{end}}
 {{define "content"}}
-    <div id="firebaseui-auth-container"></div>
+    <form id="signInUserForm" method="POST">
+        <div class="form-group">
+            <label for="userEmail">Email address</label>
+            <input type="email" class="form-control" name="userEmail" id="userEmail" aria-describedby="emailHelp" required>
+        </div>
+        <div class="form-group">
+            <label for="userPwd">Password</label>
+            <input type="password" class="form-control" name="userPwd" id="userPwd" minlength="8" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
 {{end}}
 
 {{define "script"}}
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <script>
-        // TODO: disable sign up page
-        const ui = new firebaseui.auth.AuthUI(firebase.auth());
-        ui.start('#firebaseui-auth-container', {
-            signInSuccessUrl: '/',
-            signInOptions: [
-                firebase.auth.EmailAuthProvider.PROVIDER_ID,
-            ],
-            // Other config options...
-            credentialHelper: firebaseui.auth.CredentialHelper.NONE
+        $( "#signInUserForm" ).submit(function( event ) {
+            event.preventDefault();
+            const user_email = $('#userEmail').val();
+            const user_pwd = $('#userPwd').val();
+            // As httpOnly cookies are to be used, do not persist any state client side.
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+            // When the user signs in with email and password.
+            firebase.auth().signInWithEmailAndPassword(user_email, user_pwd).then(user => {
+                // Get the user's ID token as it is needed to exchange for a session cookie.
+                return firebase.auth().currentUser.getIdToken().then(idToken => {
+                    // Session login endpoint is queried and the session cookie is set.
+                    // CSRF protection should be taken into account.
+                    // ...
+                    // alert(idToken);
+                    // const csrfToken = getCookie('csrfToken');
+                    // TODO: 定義一個url 接收 uid 寫入session
+                    return postIdTokenToSessionLogin('/sessionLogin', idToken, csrfToken);
+            });
+            }).then(() => {
+                // A page redirect would suffice as the persistence is set to NONE.
+                return firebase.auth().signOut();
+            }).then(() => {
+                window.location.assign('/');
+            });
         });
     </script>
 {{end}}

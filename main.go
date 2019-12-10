@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-
+// TODO: csrf機制, https://firebase.google.com/docs/auth/admin/manage-cookies 實作
 func main() {
 
 	// load the project .env file
