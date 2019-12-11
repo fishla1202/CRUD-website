@@ -17,6 +17,7 @@
         <label for="confirmPwd">Confirm Password</label>
         <input type="password" class="form-control" id="confirmPwd" minlength="8" required>
     </div>
+        {{ .CsrfTag }}
     <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
 {{end}}

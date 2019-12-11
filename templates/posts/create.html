@@ -10,7 +10,10 @@
             <label for="postContent">Content</label>
             <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required></textarea>
         </div>
+{{/*        TODO: when session login feature ok remove this line*/}}
         <input type="hidden" class="form-control" name="uid" id="uid">
+
+        {{ .CsrfTag }}
         <button class="btn btn-success" type="submit">Create</button>
     </form>
 {{end}}

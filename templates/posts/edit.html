@@ -11,6 +11,7 @@
             <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required>{{.PageQuery.Value.Content}}</textarea>
             <input type="hidden" value="{{.PageQuery.Value.ID}}" name="id">
         </div>
+        {{ .CsrfTag }}
         <button class="btn btn-success" type="submit">Update</button>
     </form>
 {{end}}

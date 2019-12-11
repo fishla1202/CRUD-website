@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/models/users"
@@ -44,7 +45,9 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
 	}else if r.Method == "GET" {
-		pageContent := PageContent{PageTitle: "Create Post"}
+		pageContent := PageContent{
+			PageTitle: "Create Post",
+			CsrfTag: csrf.TemplateField(r)}
 		index := path.Join("templates/posts", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 	}else {
@@ -70,9 +73,12 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
 		id := params["id"]
 		post := posts.FindById(id)
+
 		pageContent := PageContent{
 			PageTitle: "Edit Post",
-			PageQuery: post}
+			PageQuery: post,
+			CsrfTag: csrf.TemplateField(r)}
+
 		index := path.Join("templates/posts", "edit.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 	}else {
