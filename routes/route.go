@@ -34,7 +34,7 @@ func Main() {
 	r.HandleFunc("/public/firebase_config.js", SendJqueryJs).Methods("GET").Name("firebaseConfig")
 
 	csrfKey := make([]byte, 32)
-	env := os.Getenv("app")
+	env := os.Getenv("APP")
 
 	var csrfMiddleware func(http.Handler) http.Handler
 

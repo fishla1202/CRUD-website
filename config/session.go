@@ -40,16 +40,18 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("error creating user: %v\n", err)
 	}
 
-	decoded, err := client.VerifyIDToken(r.Context(), idToken)
-	if err != nil {
-		http.Error(w, "Invalid ID token", http.StatusUnauthorized)
-		return
-	}
+	//decoded, err := client.VerifyIDToken(r.Context(), idToken)
+	//if err != nil {
+	//	http.Error(w, "Invalid ID token", http.StatusUnauthorized)
+	//	return
+	//}
+
 	// Return error if the sign-in is older than 5 minutes.
-	if time.Now().Unix()-decoded.Claims["auth_time"].(int64) > 5*60 {
-		http.Error(w, "Recent sign-in required", http.StatusUnauthorized)
-		return
-	}
+	//if time.Now().Unix()-decoded.Claims["auth_time"].(int64) > 5*60 {
+	//	http.Error(w, "Recent sign-in required", http.StatusUnauthorized)
+	//	return
+	//}
+
 
 
 	cookie, err := client.SessionCookie(r.Context(), idToken, expiresIn)
