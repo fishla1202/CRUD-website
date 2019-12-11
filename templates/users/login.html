@@ -20,6 +20,10 @@
             $.ajax({
                 url: url,
                 type: 'POST',
+                headers: {
+                    "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
+                },
+                credentials: true,
                 data: {
                     idToken: idToken
                 },
