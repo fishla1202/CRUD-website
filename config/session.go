@@ -15,7 +15,6 @@ import (
 
 func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	// Get the ID token sent by the client
-	defer r.Body.Close()
 	idToken, err := getIDTokenFromBody(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

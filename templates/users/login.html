@@ -1,5 +1,5 @@
 {{define "content"}}
-    <form id="signInUserForm" method="POST">
+    <form id="loginUserForm" method="POST">
         <div class="form-group">
             <label for="userEmail">Email address</label>
             <input type="email" class="form-control" name="userEmail" id="userEmail" aria-describedby="emailHelp" required>
@@ -8,15 +8,17 @@
             <label for="userPwd">Password</label>
             <input type="password" class="form-control" name="userPwd" id="userPwd" minlength="8" required>
         </div>
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        {{ .CsrfTag }}
+        <button type="submit" class="btn btn-primary">Login</button>
     </form>
 {{end}}
 
 {{define "script"}}
     <script>
         function postIdTokenToSessionLogin(url, idToken) {
+            url = "http://127.0.0.1:8000" + url;
             $.ajax({
-                url: "127.0.0.1:8000" + url,
+                url: url,
                 type: 'POST',
                 data: {
                     idToken: idToken
@@ -24,12 +26,12 @@
                 success: function(response) {
                 },
                 error: function(xhr) {
-                    alert(xhr.status);
+                    console.log(arguments);
                 }
             });
         }
 
-        $( "#signInUserForm" ).submit(function( event ) {
+        $( "#loginUserForm" ).submit(function( event ) {
             event.preventDefault();
             const user_email = $('#userEmail').val();
             const user_pwd = $('#userPwd').val();
@@ -45,14 +47,13 @@
                     // ...
                     // alert(idToken);
                     // const csrfToken = getCookie('csrfToken');
-                    // TODO: 定義一個url 接收 uid 寫入session
                     return postIdTokenToSessionLogin('/sessionLogin/', idToken);
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.
                 return firebase.auth().signOut();
             }).then(() => {
-                window.location.assign('/');
+                // window.location.assign('/');
             });
         });
     </script>

@@ -8,7 +8,7 @@
         {{end}}
     </div>
     <a href="/post/create/" class="btn btn-primary mt-3 d-none" id="createPost">Create Post</a>
-    <a href="/user/sign-in/" id="signIn" class="btn btn-primary mt-3 d-none">Sign In</a>
+    <a href="/user/login/" id="login" class="btn btn-primary mt-3 d-none">Login</a>
     <a href="#" id="signOut" class="btn btn-primary mt-3 d-none">Sign Out</a>
 {{end}}
 
@@ -20,7 +20,7 @@
             $("#signOut").removeClass("d-none");
             $("#createPost").removeClass("d-none");
         }else {
-            $("#signIn").removeClass("d-none");
+            $("#login").removeClass("d-none");
             $("#signOut").addClass("d-none");
             $("#createPost").addClass("d-none");
         }
