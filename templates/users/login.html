@@ -16,7 +16,7 @@
 {{define "script"}}
     <script>
         function postIdTokenToSessionLogin(url, idToken) {
-            url = "http://127.0.0.1:8000" + url;
+            url = window.location.protocol + "//" + window.location.host + url;
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -30,7 +30,7 @@
                 success: function(response) {
                 },
                 error: function(xhr) {
-                    console.log(arguments);
+                    alert(xhr.status);
                 }
             });
         }
@@ -47,17 +47,15 @@
                 // Get the user's ID token as it is needed to exchange for a session cookie.
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
-                    // CSRF protection should be taken into account.
-                    // ...
-                    // alert(idToken);
-                    // const csrfToken = getCookie('csrfToken');
                     return postIdTokenToSessionLogin('/sessionLogin/', idToken);
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.
                 return firebase.auth().signOut();
             }).then(() => {
-                window.location.assign('/');
+                // window.location.assign('/');
+            }).catch((err) => {
+                alert(err.message)
             });
         });
     </script>

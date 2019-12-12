@@ -39,7 +39,7 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("error creating user: %v\n", err)
 	}
-
+	// TODO: 驗證token時效 有type問題需排除
 	//decoded, err := client.VerifyIDToken(r.Context(), idToken)
 	//if err != nil {
 	//	http.Error(w, "Invalid ID token", http.StatusUnauthorized)
