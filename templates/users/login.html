@@ -23,7 +23,6 @@
                 headers: {
                     "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
                 },
-                credentials: true,
                 data: {
                     idToken: idToken
                 },
@@ -47,7 +46,7 @@
                 // Get the user's ID token as it is needed to exchange for a session cookie.
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
-                    return postIdTokenToSessionLogin('/sessionLogin/', idToken);
+                    return postIdTokenToSessionLogin('/user/login/', idToken);
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.

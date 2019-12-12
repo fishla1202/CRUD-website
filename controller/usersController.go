@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gorilla/csrf"
+	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
@@ -33,10 +34,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
-	pageContent := PageContent{
-		PageTitle: "User login",
-		PageQuery: nil,
-		CsrfTag: csrf.TemplateField(r)}
-	index := path.Join("templates/users", "login.html")
-	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+	if r.Method == "POST" {
+
+		// user login session setup
+		config.SetLoginSession(w, r)
+
+	}else if r.Method == "GET"{
+
+		pageContent := PageContent{
+			PageTitle: "User login",
+			PageQuery: nil,
+			CsrfTag: csrf.TemplateField(r)}
+		index := path.Join("templates/users", "login.html")
+		render_templates.ReturnRenderTemplate(w, index, &pageContent)
+	}
 }
