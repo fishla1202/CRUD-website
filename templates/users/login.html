@@ -15,8 +15,8 @@
 
 {{define "script"}}
     <script>
-        function postIdTokenToSessionLogin(url, idToken) {
-            url = window.location.protocol + "//" + window.location.host + url;
+        function postIdTokenToSessionLogin(idToken) {
+            url = window.location.href;
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -46,13 +46,13 @@
                 // Get the user's ID token as it is needed to exchange for a session cookie.
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
-                    return postIdTokenToSessionLogin('/user/login/', idToken);
+                    return postIdTokenToSessionLogin(idToken);
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.
                 return firebase.auth().signOut();
             }).then(() => {
-                // window.location.assign('/');
+                window.location.assign('/');
             }).catch((err) => {
                 alert(err.message)
             });

@@ -12,6 +12,7 @@ import (
 
 
 func PostDetail(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	params := mux.Vars(r)
 	id := params["id"]
 	post := posts.FindById(id)
@@ -27,6 +28,7 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
@@ -56,7 +58,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func EditPost(w http.ResponseWriter, r *http.Request) {
-
+	defer r.Body.Close()
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
@@ -87,6 +89,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeletePost(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	params := mux.Vars(r)
 	id := params["id"]
 	//fmt.Println(id)

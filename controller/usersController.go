@@ -11,6 +11,7 @@ import (
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	if r.Method == "GET" {
 		pageContent := PageContent{
 			PageTitle: "Sign up",
@@ -34,6 +35,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	if r.Method == "POST" {
 
 		// user login session setup
