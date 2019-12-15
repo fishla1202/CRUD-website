@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/jinzhu/gorm"
+	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/render_templates"
 	"html/template"
@@ -19,7 +20,7 @@ type PageContent struct {
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	//TODO: 錯誤排除
-	//_ = config.CheackSessionCookie(w, r)
+	_ = config.CheckSessionCookie(w, r)
 	allPosts := posts.FindAllPosts()
 
 	pageContent := PageContent{

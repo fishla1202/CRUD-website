@@ -27,6 +27,7 @@
                     idToken: idToken
                 },
                 success: function(response) {
+                    window.location.assign('/');
                 },
                 error: function(xhr) {
                     alert(xhr.status);
@@ -46,13 +47,13 @@
                 // Get the user's ID token as it is needed to exchange for a session cookie.
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
-                    return postIdTokenToSessionLogin(idToken);
+                    return postIdTokenToSessionLogin(idToken)
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.
                 return firebase.auth().signOut();
             }).then(() => {
-                window.location.assign('/');
+                // window.location.assign('/');
             }).catch((err) => {
                 alert(err.message)
             });

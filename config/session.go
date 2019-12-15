@@ -2,6 +2,7 @@ package config
 
 import (
 	"firebase.google.com/go/auth"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -42,15 +43,17 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to create a session cookie", http.StatusInternalServerError)
 		return
 	}
-
-	// Set cookie policy for session cookie.
-	http.SetCookie(w, &http.Cookie{
+	httpCookie := http.Cookie{
 		Name:     "session",
 		Value:    cookie,
+		Path: "/",
 		MaxAge:   int(expiresIn.Seconds()),
 		HttpOnly: true,
 		Secure:   true,
-	})
+	}
+	// Set cookie policy for session cookie.
+	http.SetCookie(w, &httpCookie)
+	//r.AddCookie(&httpCookie)
 	w.Write([]byte(`{"status": "success"}`))
 }
 
@@ -60,10 +63,15 @@ func getIDTokenFromBody(r *http.Request) (string, error){
 	return r.Form["idToken"][0], nil
 }
 
-func CheackSessionCookie(w http.ResponseWriter, r *http.Request) *auth.Token{
+func CheckSessionCookie(w http.ResponseWriter, r *http.Request) *auth.Token{
+
+	for _, cookie := range r.Cookies() {
+		fmt.Println("Found a cookie named:", cookie.Name)
+	}
+
 	// Get the ID token sent by the client
 	cookie, err := r.Cookie("session")
-	//fmt.Print(cookie)
+
 	if err != nil {
 		// Session cookie is unavailable. Force user to login.
 		http.Redirect(w, r, "/login", http.StatusFound)
