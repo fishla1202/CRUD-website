@@ -27,6 +27,7 @@ func Main() {
 	u.HandleFunc("/sign-up/", controller.CreateUser).Methods("GET", "POST").Name("createUser")
 	u.HandleFunc("/login/", controller.LoginUser).Methods("GET").Name("loginUser")
 	u.HandleFunc("/login/", config.SetLoginSession).Methods("POST").Name("setLoginSession")
+	u.HandleFunc("/sign-out/", config.SessionSignOut).Name("userSignOut")
 
 	// load the static file
 	r.HandleFunc("/public/firebase_config.js", SendJqueryJs).Methods("GET").Name("firebaseConfig")
@@ -37,7 +38,7 @@ func Main() {
 	var csrfMiddleware func(http.Handler) http.Handler
 
 	if env == "dev" {
-		csrfMiddleware = csrf.Protect(csrfKey, csrf.Secure(false))
+		csrfMiddleware = csrf.Protect(csrfKey, csrf.Secure(false), csrf.Path("/"))
 	}else if  env == "production"{
 		csrfMiddleware = csrf.Protect(csrfKey)
 	}else {

@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gorilla/csrf"
+	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
@@ -11,11 +12,20 @@ import (
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+
+	isUser := config.CheckSessionCookie(r)
+
+	if isUser {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
 	if r.Method == "GET" {
 		pageContent := PageContent{
 			PageTitle: "Sign up",
 			PageQuery: nil,
-			CsrfTag: csrf.TemplateField(r)}
+			CsrfTag: csrf.TemplateField(r),
+			IsUser: isUser,
+		}
 
 		index := path.Join("templates/users", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
@@ -35,11 +45,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+	isUser := config.CheckSessionCookie(r)
+
+	if isUser {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 
 	pageContent := PageContent{
 		PageTitle: "User login",
 		PageQuery: nil,
-		CsrfTag: csrf.TemplateField(r)}
+		CsrfTag: csrf.TemplateField(r),
+		IsUser: isUser,
+	}
+
 	index := path.Join("templates/users", "login.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)
 

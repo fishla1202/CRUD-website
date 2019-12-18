@@ -27,6 +27,7 @@
                     idToken: idToken
                 },
                 success: function(response) {
+                    // alert(response);
                     window.location.assign('/');
                 },
                 error: function(xhr) {
@@ -39,6 +40,7 @@
             event.preventDefault();
             const user_email = $('#userEmail').val();
             const user_pwd = $('#userPwd').val();
+
             // As httpOnly cookies are to be used, do not persist any state client side.
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
 

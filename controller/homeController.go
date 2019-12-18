@@ -14,18 +14,19 @@ type PageContent struct {
 	PageTitle string
 	PageQuery *gorm.DB
 	CsrfTag template.HTML
+	IsUser bool
 }
 
-// TODO: 將login firebase 拿到的uid 存在session裡
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	//TODO: 錯誤排除
-	_ = config.CheckSessionCookie(w, r)
+	isUser := config.CheckSessionCookie(r)
+
 	allPosts := posts.FindAllPosts()
 
 	pageContent := PageContent{
-		PageTitle: "FishLa",
+		PageTitle: "Discuss",
 		PageQuery: allPosts,
+		IsUser: isUser,
 	}
 
 	index := path.Join("templates", "index.html")

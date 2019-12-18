@@ -1,7 +1,6 @@
 package config
 
 import (
-	"firebase.google.com/go/auth"
 	"fmt"
 	"net/http"
 	"time"
@@ -44,12 +43,13 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httpCookie := http.Cookie{
-		Name:     "session",
+		Name:     "firebaseSession",
 		Value:    cookie,
 		Path: "/",
 		MaxAge:   int(expiresIn.Seconds()),
 		HttpOnly: true,
-		Secure:   true,
+		// TODO: production env open it
+		//Secure:   true,
 	}
 	// Set cookie policy for session cookie.
 	http.SetCookie(w, &httpCookie)
@@ -63,26 +63,57 @@ func getIDTokenFromBody(r *http.Request) (string, error){
 	return r.Form["idToken"][0], nil
 }
 
-func CheckSessionCookie(w http.ResponseWriter, r *http.Request) *auth.Token{
-
-	for _, cookie := range r.Cookies() {
-		fmt.Println("Found a cookie named:", cookie.Name)
-	}
+func CheckSessionCookie(r *http.Request) bool{
+	defer r.Body.Close()
 
 	// Get the ID token sent by the client
-	cookie, err := r.Cookie("session")
-
+	cookie, err := r.Cookie("firebaseSession")
+	fmt.Println("CheckSessionCookie:", cookie)
 	if err != nil {
 		// Session cookie is unavailable. Force user to login.
-		http.Redirect(w, r, "/login", http.StatusFound)
+		return false
 	}
+
 	client := GetFireBaseClient()
 	// Verify the session cookie. In this case an additional check is added to detect
 	// if the user's Firebase session was revoked, user deleted/disabled, etc.
-	decoded, err := client.VerifySessionCookieAndCheckRevoked(r.Context(), cookie.Value)
+	_, err = client.VerifySessionCookieAndCheckRevoked(r.Context(), cookie.Value)
 	if err != nil {
 		// Session cookie is invalid. Force user to login.
-		http.Redirect(w, r, "/login", http.StatusFound)
+		return false
 	}
-	return decoded
+	return true
+}
+
+func SessionSignOut(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	cookie, err := r.Cookie("firebaseSession")
+	if err != nil {
+		// Session cookie is unavailable. Force user to login.
+		http.Redirect(w, r, "/user/login/", http.StatusFound)
+		return
+	}
+	fmt.Print(cookie)
+	client := GetFireBaseClient()
+	decoded, err := client.VerifySessionCookie(r.Context(), cookie.Value)
+	if err != nil {
+		// Session cookie is invalid. Force user to login.
+		http.Redirect(w, r, "/user/login/", http.StatusFound)
+		return
+	}
+	if err := client.RevokeRefreshTokens(r.Context(), decoded.UID); err != nil {
+		http.Error(w, "Failed to revoke refresh token", http.StatusInternalServerError)
+		return
+	}
+
+	removeCookie := &http.Cookie{
+		Name:   "firebaseSession",
+		Value:  "",
+		MaxAge: 0,
+		Path: "/",
+	}
+	http.SetCookie(w, removeCookie)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+
 }
