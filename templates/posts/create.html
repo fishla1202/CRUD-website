@@ -17,21 +17,3 @@
         <button class="btn btn-success" type="submit">Create</button>
     </form>
 {{end}}
-
-{{define "script"}}
-
-<script>
-    $(document).ready(function () {
-        firebase.auth().onAuthStateChanged(function(user) {
-
-            if (user) {
-                $("#uid").val(user.uid);
-            } else {
-                // No user is signed in.
-                window.location = "/";
-            }
-        })
-    });
-</script>
-
-{{end}}

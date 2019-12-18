@@ -37,7 +37,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		uid := users.CreateUser(
 			r.Form["userName"][0], r.Form["userEmail"][0], r.Form["userPwd"][0])
 		fmt.Println(uid)
-		http.Redirect(w, r, "/user/sign-in/", http.StatusSeeOther)
+		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
 	}else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}

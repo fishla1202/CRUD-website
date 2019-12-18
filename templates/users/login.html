@@ -15,7 +15,7 @@
 
 {{define "script"}}
     <script>
-        function postIdTokenToSessionLogin(idToken) {
+        function postIdTokenToSessionLogin(idToken, uid) {
             url = window.location.href;
             $.ajax({
                 url: url,
@@ -24,7 +24,8 @@
                     "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
                 },
                 data: {
-                    idToken: idToken
+                    idToken: idToken,
+                    uid: uid
                 },
                 success: function(response) {
                     // alert(response);
@@ -49,7 +50,7 @@
                 // Get the user's ID token as it is needed to exchange for a session cookie.
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
-                    return postIdTokenToSessionLogin(idToken)
+                    return postIdTokenToSessionLogin(idToken, user.user.uid)
             });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.

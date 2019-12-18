@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-// TODO: https://firebase.google.com/docs/auth/admin/manage-cookies 實作
 func main() {
 
 	// load the project .env file
