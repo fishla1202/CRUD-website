@@ -12,16 +12,15 @@ import (
 
 var Client *auth.Client
 
-func GetFireBaseClient() *auth.Client{
+func InitFirebaseClient() {
 	opt := option.WithCredentialsFile(path.Join("secret", os.Getenv("FIREBASE_KEY_PATH")))
 	ctx := context.Background()
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		log.Fatal("error initializing app:", err)}
 
-	Client, err := app.Auth(ctx)
+	Client, err = app.Auth(ctx)
 	if err != nil {
 		log.Fatalf("error creating user: %v\n", err)
 	}
-	return Client
 }

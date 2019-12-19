@@ -1,9 +1,12 @@
 package config
 
 import (
+	"github.com/gorilla/sessions"
 	"net/http"
 	"time"
 )
+
+var Store = sessions.NewCookieStore(make([]byte, 32))
 
 func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	// Get the ID token sent by the client
@@ -21,9 +24,8 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	// The session cookie will have the same claims as the ID token.
 	// To only allow session cookie setting on recent sign-in, auth_time in ID token
 	// can be checked to ensure user was recently signed in before creating a session cookie.
-	client := GetFireBaseClient()
 
-	decoded, err := client.VerifyIDToken(r.Context(), userLoginInfo["idToken"])
+	decoded, err := Client.VerifyIDToken(r.Context(), userLoginInfo["idToken"])
 	if err != nil {
 		http.Error(w, "Invalid ID token", http.StatusUnauthorized)
 		return
@@ -36,35 +38,23 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	cookie, err := client.SessionCookie(r.Context(), userLoginInfo["idToken"], expiresIn)
+	cookie, err := Client.SessionCookie(r.Context(), userLoginInfo["idToken"], expiresIn)
 	if err != nil {
 		http.Error(w, "Failed to create a session cookie", http.StatusInternalServerError)
 		return
 	}
 
-	firebaseSession := http.Cookie{
-		Name:     "firebaseSession",
-		Value:    cookie,
-		Path: "/",
-		MaxAge:   int(expiresIn.Seconds()),
-		HttpOnly: true,
-		// TODO: production env open it
-		//Secure:   true,
+	session, _ := Store.Get(r, "user-info")
+	// Set some session values.
+	session.Values["uid"] = userLoginInfo["uid"]
+	session.Values["sessionCookie"] = cookie
+	// Save it before we write to the response/return from the handler.
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	userInfo := http.Cookie{
-		Name:     "userInfo",
-		Value:    userLoginInfo["uid"],
-		Path: "/",
-		MaxAge:   int(expiresIn.Seconds()),
-		HttpOnly: true,
-		// TODO: production env open it
-		//Secure:   true,
-	}
-	// Set cookie policy for session cookie.
-	http.SetCookie(w, &firebaseSession)
-	http.SetCookie(w, &userInfo)
-	//r.AddCookie(&httpCookie)
 	w.Write([]byte(`{"status": "success"}`))
 }
 
@@ -81,16 +71,15 @@ func CheckSessionCookie(r *http.Request) bool{
 	defer r.Body.Close()
 
 	// Get the ID token sent by the client
-	cookie, err := r.Cookie("firebaseSession")
-	if err != nil {
-		// Session cookie is unavailable. Force user to login.
+	session, err := Store.Get(r, "user-info")
+
+	if session.Values["sessionCookie"] == nil {
 		return false
 	}
 
-	client := GetFireBaseClient()
 	// Verify the session cookie. In this case an additional check is added to detect
 	// if the user's Firebase session was revoked, user deleted/disabled, etc.
-	_, err = client.VerifySessionCookieAndCheckRevoked(r.Context(), cookie.Value)
+	_, err = Client.VerifySessionCookieAndCheckRevoked(r.Context(), session.Values["sessionCookie"].(string))
 	if err != nil {
 		// Session cookie is invalid. Force user to login.
 		return false
@@ -100,40 +89,31 @@ func CheckSessionCookie(r *http.Request) bool{
 
 func SessionSignOut(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	cookie, err := r.Cookie("firebaseSession")
+	session, err := Store.Get(r, "user-info")
 	if err != nil {
 		// Session cookie is unavailable. Force user to login.
 		http.Redirect(w, r, "/user/login/", http.StatusFound)
 		return
 	}
-	client := GetFireBaseClient()
-	decoded, err := client.VerifySessionCookie(r.Context(), cookie.Value)
+
+	decoded, err := Client.VerifySessionCookie(r.Context(), session.Values["sessionCookie"].(string))
 	if err != nil {
 		// Session cookie is invalid. Force user to login.
 		http.Redirect(w, r, "/user/login/", http.StatusFound)
 		return
 	}
-	if err := client.RevokeRefreshTokens(r.Context(), decoded.UID); err != nil {
+	if err := Client.RevokeRefreshTokens(r.Context(), decoded.UID); err != nil {
 		http.Error(w, "Failed to revoke refresh token", http.StatusInternalServerError)
 		return
 	}
 
-	removeFirebaseCookie := &http.Cookie{
-		Name:   "firebaseSession",
-		Value:  "",
-		MaxAge: 0,
-		Path: "/",
+	session.Values["sessionCookie"] = nil
+	session.Values["uid"] = nil
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-
-	removeUidCookie := &http.Cookie{
-		Name:   "userInfo",
-		Value:  "",
-		MaxAge: 0,
-		Path: "/",
-	}
-
-	http.SetCookie(w, removeFirebaseCookie)
-	http.SetCookie(w, removeUidCookie)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 

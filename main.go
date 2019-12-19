@@ -22,6 +22,7 @@ func main() {
 	// open db connection pool and run migration files
 	db := config.OpenDatabaseConnectionPool()
 	config.MigrateAndPassDatabaseConnectionToModels(db)
+	config.InitFirebaseClient()
 
 	// open server
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))

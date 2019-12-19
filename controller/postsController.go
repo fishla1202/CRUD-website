@@ -44,9 +44,10 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		if r.Form["content"] == nil || r.Form["title"] == nil || r.Form["uid"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else {
-			uid, err := r.Cookie("userInfo")
+			session, err := config.Store.Get(r, "user-info")
+			uid := session.Values["uid"]
 			if err != nil {http.Redirect(w, r, "/uesr/login/", http.StatusSeeOther)}
-			userId := users.FindUserByUID(uid.Value)
+			userId := users.FindUserByUID(uid.(string))
 
 			post := posts.Post{
 				Title:   r.Form["title"][0],
