@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/gorilla/sessions"
+	"golang_side_project_crud_website/models/users"
 	"net/http"
 	"time"
 )
@@ -44,10 +45,12 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userId := users.FindUserByUID(userLoginInfo["uid"])
 	session, _ := Store.Get(r, "user-info")
-	// Set some session values.
+	// Set user session values.
 	session.Values["uid"] = userLoginInfo["uid"]
 	session.Values["sessionCookie"] = cookie
+	session.Values["userId"] = userId
 	// Save it before we write to the response/return from the handler.
 	err = session.Save(r, w)
 	if err != nil {
@@ -67,21 +70,35 @@ func getIDTokenFromBody(r *http.Request) (map[string]string, error){
 	return userLoginInfo, nil
 }
 
-func CheckSessionCookie(r *http.Request) bool{
+func cleanSession(w http.ResponseWriter, r *http.Request){
+
+	session, _ := Store.Get(r, "user-info")
+	session.Values["sessionCookie"] = nil
+	session.Values["uid"] = nil
+	session.Values["userId"] = nil
+	err := session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func CheckSessionCookie(w http.ResponseWriter, r *http.Request) bool{
 	defer r.Body.Close()
 
 	// Get the ID token sent by the client
-	session, err := Store.Get(r, "user-info")
+	session, _ := Store.Get(r, "user-info")
 
 	if session.Values["sessionCookie"] == nil {
+		cleanSession(w, r)
 		return false
 	}
-
 	// Verify the session cookie. In this case an additional check is added to detect
 	// if the user's Firebase session was revoked, user deleted/disabled, etc.
-	_, err = Client.VerifySessionCookieAndCheckRevoked(r.Context(), session.Values["sessionCookie"].(string))
+	_, err := Client.VerifySessionCookieAndCheckRevoked(r.Context(), session.Values["sessionCookie"].(string))
 	if err != nil {
 		// Session cookie is invalid. Force user to login.
+		cleanSession(w, r)
 		return false
 	}
 	return true
@@ -107,14 +124,7 @@ func SessionSignOut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session.Values["sessionCookie"] = nil
-	session.Values["uid"] = nil
-	err = session.Save(r, w)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	cleanSession(w, r)
 
 	http.Redirect(w, r, "/", http.StatusFound)
-
 }

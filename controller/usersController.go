@@ -4,16 +4,44 @@ import (
 	"fmt"
 	"github.com/gorilla/csrf"
 	"golang_side_project_crud_website/config"
+	"golang_side_project_crud_website/models/posts"
 	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
 )
 
+
+func UserIndex(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
+	isUser := config.CheckSessionCookie(w, r)
+
+	if !isUser {
+		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
+	}
+
+	session, _ := config.Store.Get(r, "user-info")
+	userID := session.Values["userId"]
+	qs := posts.FindByUserId(userID.(uint))
+
+	pageContent := PageContent{
+		PageTitle: "Dashboard",
+		PageQuery: qs,
+		//CsrfTag: csrf.TemplateField(r),
+		IsUser: isUser,
+	}
+
+	index := path.Join("templates/users", "index.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+
+}
+
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 
 	if isUser {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -45,7 +73,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 
 	if isUser {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

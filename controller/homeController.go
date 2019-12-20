@@ -19,7 +19,7 @@ type PageContent struct {
 
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 
 	allPosts := posts.FindAllPosts()
 

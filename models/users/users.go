@@ -65,7 +65,7 @@ func CreateUser(userName string, userEmail string, userPwd string) string{
 
 func FindUserByUID(uid string) uint{
 	var user User
-	userId := DB.Select("id").Where("uid = ?", uid).First(&user)
+	userId := DB.Select("id").Find(&user, User{Uid: uid})
 	return userId.Value.(*User).ID
 }
 

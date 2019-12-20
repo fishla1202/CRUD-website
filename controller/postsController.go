@@ -5,7 +5,6 @@ import (
 	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/models/posts"
-	"golang_side_project_crud_website/models/users"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
@@ -14,7 +13,7 @@ import (
 
 func PostDetail(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 	params := mux.Vars(r)
 	id := params["id"]
 	post := posts.FindById(id)
@@ -32,7 +31,7 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 
 	if !isUser {
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
@@ -41,18 +40,17 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
-		if r.Form["content"] == nil || r.Form["title"] == nil || r.Form["uid"] == nil {
+
+		if r.Form["content"] == nil || r.Form["title"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}else {
-			session, err := config.Store.Get(r, "user-info")
-			uid := session.Values["uid"]
-			if err != nil {http.Redirect(w, r, "/uesr/login/", http.StatusSeeOther)}
-			userId := users.FindUserByUID(uid.(string))
+			session, _ := config.Store.Get(r, "user-info")
+			userId := session.Values["userId"]
 
 			post := posts.Post{
 				Title:   r.Form["title"][0],
 				Content: r.Form["content"][0],
-				UserID:  userId,
+				UserID:  userId.(uint),
 			}
 			posts.InsertPost(&post)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -73,23 +71,22 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 func EditPost(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	isUser := config.CheckSessionCookie(r)
+	isUser := config.CheckSessionCookie(w, r)
 
 	if !isUser {
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
 	}
+
+	session, _ := config.Store.Get(r, "user-info")
+	userId := session.Values["userId"]
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
 		if r.Form["content"] == nil || r.Form["title"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 		}else {
-			uid, err := r.Cookie("userInfo")
-			if err != nil {http.Redirect(w, r, "/uesr/login/", http.StatusSeeOther)}
-			userId := users.FindUserByUID(uid.Value)
-			title := r.Form["title"][0]
-			content := r.Form["content"][0]
 			id := r.Form["id"][0]
 			postBelongToUserID := posts.FindById(id).Value.(posts.Post).UserID
 
@@ -97,7 +94,10 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 				//http.Error(w, err.Error(), http.StatusInternalServerError)
 				http.Redirect(w, r, "/", http.StatusSeeOther)
 			}
-			
+
+			title := r.Form["title"][0]
+			content := r.Form["content"][0]
+
 			posts.UpdateById(id, title, content)
 			http.Redirect(w, r, "/post/edit/" + id, http.StatusSeeOther)
 		}
@@ -105,6 +105,11 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
 		id := params["id"]
 		post := posts.FindById(id)
+
+		if post.Value.(*posts.Post).UserID != userId {
+			//http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		}
 
 		pageContent := PageContent{
 			PageTitle: "Edit Post",

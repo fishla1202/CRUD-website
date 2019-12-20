@@ -37,6 +37,12 @@ func FindById(id string) *gorm.DB{
 	return res
 }
 
+func FindByUserId(userID uint) *gorm.DB{
+	var posts []Post
+	res := DB.Find(&posts, Post{UserID: userID})
+	return res
+}
+
 func UpdateById(id string, title string, content string){
 	var posts Post
 	DB.Model(&posts).Where("id = ?", id).Update(

@@ -1,0 +1,10 @@
+{{define "content"}}
+    <div class="list-group">
+        {{range $k, $val := .PageQuery.Value}}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="/post/{{$val.ID}}/"> {{$val.Title}}</a>
+                <a href="/post/delete/{{$val.ID}}/"><span class="badge badge-primary badge-pill"><i class="fas fa-trash-alt"></i></span></a>
+            </li>
+        {{end}}
+    </div>
+{{end}}
