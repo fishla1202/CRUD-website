@@ -24,7 +24,7 @@ func Main() {
 
 	// user
 	u := r.PathPrefix("/user").Subrouter()
-	u.HandleFunc("/", controller.UserIndex).Name("userIndex")
+	u.HandleFunc("/dashboard/", controller.UserIndex).Name("userIndex")
 	u.HandleFunc("/sign-up/", controller.CreateUser).Methods("GET", "POST").Name("createUser")
 	u.HandleFunc("/login/", controller.LoginUser).Methods("GET").Name("loginUser")
 	u.HandleFunc("/login/", config.SetLoginSession).Methods("POST").Name("setLoginSession")

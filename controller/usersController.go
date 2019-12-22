@@ -19,21 +19,21 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
 
 	if !isUser {
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
+	}else {
+		session, _ := config.Store.Get(r, "user-info")
+		userID := session.Values["userId"]
+		qs := posts.FindByUserId(userID.(uint))
+
+		pageContent := PageContent{
+			PageTitle: "Dashboard",
+			PageQuery: qs,
+			//CsrfTag: csrf.TemplateField(r),
+			IsUser: isUser,
+		}
+
+		index := path.Join("templates/users", "index.html")
+		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 	}
-
-	session, _ := config.Store.Get(r, "user-info")
-	userID := session.Values["userId"]
-	qs := posts.FindByUserId(userID.(uint))
-
-	pageContent := PageContent{
-		PageTitle: "Dashboard",
-		PageQuery: qs,
-		//CsrfTag: csrf.TemplateField(r),
-		IsUser: isUser,
-	}
-
-	index := path.Join("templates/users", "index.html")
-	render_templates.ReturnRenderTemplate(w, index, &pageContent)
 
 }
 
