@@ -27,6 +27,7 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 
 	index := path.Join("templates/posts", "detail.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+	return
 }
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +36,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	if !isUser {
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
+		return
 	}
 
 	if r.Method == "POST" {
@@ -54,6 +56,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			}
 			posts.InsertPost(&post)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
 		}
 	}else if r.Method == "GET" {
 
@@ -64,8 +67,10 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		}
 		index := path.Join("templates/posts", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
+		return
 	}else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 }
 
@@ -75,6 +80,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 	if !isUser {
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
+		return
 	}
 
 	session, _ := config.Store.Get(r, "user-info")
@@ -85,7 +91,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
 		if r.Form["content"] == nil || r.Form["title"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
-
+			return
 		}else {
 			id := r.Form["id"][0]
 			postBelongToUserID := posts.FindById(id).Value.(posts.Post).UserID
@@ -93,6 +99,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 			if postBelongToUserID != userId {
 				//http.Error(w, err.Error(), http.StatusInternalServerError)
 				http.Redirect(w, r, "/", http.StatusSeeOther)
+				return
 			}
 
 			title := r.Form["title"][0]
@@ -100,6 +107,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 			posts.UpdateById(id, title, content)
 			http.Redirect(w, r, "/post/edit/" + id, http.StatusSeeOther)
+			return
 		}
 	}else if r.Method == "GET" {
 		params := mux.Vars(r)
@@ -109,6 +117,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 		if post.Value.(*posts.Post).UserID != userId {
 			//http.Error(w, err.Error(), http.StatusInternalServerError)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
 		}
 
 		pageContent := PageContent{
@@ -118,8 +127,10 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 		index := path.Join("templates/posts", "edit.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
+		return
 	}else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 }
 
@@ -130,4 +141,5 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(id)
 	posts.DeleteById(id)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+	return
 }

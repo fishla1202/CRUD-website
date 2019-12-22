@@ -31,6 +31,6 @@ func IndexHandle(w http.ResponseWriter, r *http.Request) {
 
 	index := path.Join("templates", "index.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)
-
+	return
 
 }

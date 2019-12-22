@@ -20,5 +20,6 @@ func ReturnRenderTemplate(w http.ResponseWriter,
 	err = tmpl.Execute(w, pageContent)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
