@@ -136,10 +136,29 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 func DeletePost(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+
+	isUser := config.CheckSessionCookie(w, r)
+
+	if !isUser {
+		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
+		return
+	}
+
+	session, _ := config.Store.Get(r, "user-info")
+	userId := session.Values["userId"]
+
 	params := mux.Vars(r)
 	id := params["id"]
-	//fmt.Println(id)
+
+	post := posts.FindById(id)
+
+	if post.Value.(*posts.Post).UserID != userId {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	posts.DeleteById(id)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/user/dashboard/", http.StatusSeeOther)
 	return
 }

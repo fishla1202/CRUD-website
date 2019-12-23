@@ -2,16 +2,13 @@ package posts
 
 import (
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type Post struct {
-	ID uint `gorm:"PRIMARY_KEY"`
+	gorm.Model
 	Title string `gorm:"not null"`
 	Content string `sql:"type:text;"gorm:"not null"`
 	UserID  uint
-	UpdatedAt *time.Time
-	CreatedAt *time.Time
 }
 
 var DB *gorm.DB
