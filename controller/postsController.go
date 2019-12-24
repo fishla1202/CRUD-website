@@ -129,7 +129,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 		if r.Form["content"] == nil ||
 			r.Form["title"] == nil ||
-			r.Form["collectionID"] == nil ||{
+			r.Form["collectionID"] == nil{
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}else {
@@ -147,7 +147,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 			title := r.Form["title"][0]
 			content := r.Form["content"][0]
-			
+
 			// TODO fix error
 			collection, err := models.FindCollectionByID(r.Form["collectionID"][0])
 			if err != nil {
