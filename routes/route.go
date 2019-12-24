@@ -15,6 +15,10 @@ func Main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", controller.IndexHandle).Methods("GET").Name("home")
 
+	// collections
+	c := r.PathPrefix("/collections").Subrouter()
+	c.HandleFunc("/create/", controller.CreateCollection).Methods("GET", "POST").Name("createCollection")
+
 	// post
 	p := r.PathPrefix("/post").Subrouter()
 	p.HandleFunc("/create/", controller.CreatePost).Methods("GET", "POST").Name("createPost")
