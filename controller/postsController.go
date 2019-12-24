@@ -168,7 +168,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			http.Redirect(w, r, "/post/edit/" + id + "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/post/" + id + "/", http.StatusSeeOther)
 			return
 		}
 	}else if r.Method == "GET" {
