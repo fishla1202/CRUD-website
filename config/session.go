@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/gorilla/sessions"
-	"golang_side_project_crud_website/models/users"
+	"golang_side_project_crud_website/models"
 	"net/http"
 	"time"
 )
@@ -45,7 +45,13 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId := users.FindUserByUID(userLoginInfo["uid"])
+	userId, err := models.FindUserIDByUID(userLoginInfo["uid"])
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	session, _ := Store.Get(r, "user-info")
 	// Set user session values.
 	session.Values["uid"] = userLoginInfo["uid"]

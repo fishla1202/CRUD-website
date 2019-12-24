@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/config"
-	"golang_side_project_crud_website/models/posts"
+	"golang_side_project_crud_website/models"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
@@ -16,11 +16,16 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 	isUser := config.CheckSessionCookie(w, r)
 	params := mux.Vars(r)
 	id := params["id"]
-	post := posts.FindById(id)
+	post, err := models.FindPostById(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	// 當回傳是interface時 需要定義回傳是什麼值才能提取裡面的屬性
 	pageContent := PageContent{
-		PageTitle: post.Value.(*posts.Post).Title,
+		PageTitle: post.Title,
 		PageQuery: post,
 		IsUser: isUser,
 	}
@@ -41,27 +46,58 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
-		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-		if r.Form["content"] == nil || r.Form["title"] == nil {
+		if r.Form["content"] == nil ||
+			r.Form["title"] == nil ||
+			r.Form["collectionID"] == nil{
+
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+
 		}else {
 			session, _ := config.Store.Get(r, "user-info")
 			userId := session.Values["userId"]
 
-			post := posts.Post{
+			collection, err := models.FindCollectionByID(r.Form["collectionID"][0])
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			post := models.Post{
 				Title:   r.Form["title"][0],
 				Content: r.Form["content"][0],
-				UserID:  userId.(uint),
+				UserID: userId.(uint),
+				CollectionID: collection.ID,
+				Collection: collection,
 			}
-			posts.InsertPost(&post)
+
+			err = models.InsertPost(&post)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 	}else if r.Method == "GET" {
 
+		collections, err := models.FindAllCollections()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		pageContent := PageContent{
 			PageTitle: "Create Post",
+			PageQuery: collections,
 			CsrfTag: csrf.TemplateField(r),
 			IsUser: isUser,
 		}
@@ -85,18 +121,25 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := config.Store.Get(r, "user-info")
 	userId := session.Values["userId"]
-
+	params := mux.Vars(r)
+	id := params["id"]
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
-		if r.Form["content"] == nil || r.Form["title"] == nil {
+
+		if r.Form["content"] == nil ||
+			r.Form["title"] == nil ||
+			r.Form["collectionID"] == nil ||{
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}else {
-			id := r.Form["id"][0]
-			postBelongToUserID := posts.FindById(id).Value.(posts.Post).UserID
+			post, err := models.FindPostById(id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 
-			if postBelongToUserID != userId {
+			if post.UserID != userId {
 				//http.Error(w, err.Error(), http.StatusInternalServerError)
 				http.Redirect(w, r, "/", http.StatusSeeOther)
 				return
@@ -104,17 +147,33 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 			title := r.Form["title"][0]
 			content := r.Form["content"][0]
+			
+			// TODO fix error
+			collection, err := models.FindCollectionByID(r.Form["collectionID"][0])
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 
-			posts.UpdateById(id, title, content)
+			err = models.UpdatePostById(id, title, content)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			http.Redirect(w, r, "/post/edit/" + id, http.StatusSeeOther)
 			return
 		}
 	}else if r.Method == "GET" {
-		params := mux.Vars(r)
-		id := params["id"]
-		post := posts.FindById(id)
+		post, err := models.FindPostById(id)
 
-		if post.Value.(*posts.Post).UserID != userId {
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if post.UserID != userId {
 			//http.Error(w, err.Error(), http.StatusInternalServerError)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -150,15 +209,26 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 
-	post := posts.FindById(id)
+	post, err := models.FindPostById(id)
 
-	if post.Value.(*posts.Post).UserID != userId {
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if post.UserID != userId {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	posts.DeleteById(id)
+	err = models.DeletePostById(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	http.Redirect(w, r, "/user/dashboard/", http.StatusSeeOther)
 	return
 }

@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"github.com/jinzhu/gorm"
 	"golang_side_project_crud_website/config"
-	"golang_side_project_crud_website/models/posts"
+	"golang_side_project_crud_website/models"
 	"golang_side_project_crud_website/render_templates"
 	"html/template"
 	"net/http"
@@ -12,7 +11,7 @@ import (
 
 type PageContent struct {
 	PageTitle string
-	PageQuery *gorm.DB
+	PageQuery interface{}
 	CsrfTag template.HTML
 	IsUser bool
 }
@@ -21,7 +20,12 @@ func IndexHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	isUser := config.CheckSessionCookie(w, r)
 
-	allPosts := posts.FindAllPosts()
+	allPosts, err := models.FindAllPosts()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	pageContent := PageContent{
 		PageTitle: "Discuss",

@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/csrf"
 	"golang_side_project_crud_website/config"
-	"golang_side_project_crud_website/models/posts"
-	"golang_side_project_crud_website/models/users"
+	"golang_side_project_crud_website/models"
 	"golang_side_project_crud_website/render_templates"
 	"net/http"
 	"path"
@@ -24,11 +23,16 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := config.Store.Get(r, "user-info")
 	userID := session.Values["userId"]
-	qs := posts.FindByUserId(userID.(uint))
+	posts, err := models.FindPostByUserId(userID.(uint))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	pageContent := PageContent{
 		PageTitle: "Dashboard",
-		PageQuery: qs,
+		PageQuery: posts,
 		//CsrfTag: csrf.TemplateField(r),
 		IsUser: isUser,
 	}
@@ -68,9 +72,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-	// TODO: 判斷使用者重複註冊問題
-		uid := users.CreateUser(
+		uid, isCreated := models.CreateUser(
 			r.Form["userName"][0], r.Form["userEmail"][0], r.Form["userPwd"][0])
+
+		if !isCreated {
+			http.Error(w, uid, http.StatusInternalServerError)
+			return
+		}
+
 		fmt.Println(uid)
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
 		return

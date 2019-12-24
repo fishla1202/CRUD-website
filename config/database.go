@@ -3,9 +3,7 @@ package config
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"golang_side_project_crud_website/models/collections"
-	"golang_side_project_crud_website/models/posts"
-	"golang_side_project_crud_website/models/users"
+	"golang_side_project_crud_website/models"
 	"log"
 	"os"
 	"time"
@@ -29,10 +27,8 @@ func OpenDatabaseConnectionPool() *gorm.DB{
 }
 
 func MigrateAndPassDatabaseConnectionToModels(db *gorm.DB) {
-	posts.DB = db
-	posts.InitPostTable()
-	users.DB = db
-	users.InitUserTable()
-	collections.DB = db
-	collections.InitCollectionTable()
+	models.DB = db
+	models.InitPostTable()
+	models.InitUserTable()
+	models.InitCollectionTable()
 }

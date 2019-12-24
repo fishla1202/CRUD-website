@@ -10,8 +10,14 @@
             <label for="postContent">Content</label>
             <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required></textarea>
         </div>
-{{/*        TODO: when session login feature ok remove this line*/}}
-        <input type="hidden" class="form-control" name="uid" id="uid">
+        <div class="form-group">
+            <label for="postContent">Collection</label>
+            <select class="form-control form-control-sm" name="collectionID">
+                {{range $k, $val := .PageQuery}}
+                <option value="{{$val.ID}}">{{$val.Title}}</option>
+                {{end}}
+            </select>
+        </div>
 
         {{ .CsrfTag }}
         <button class="btn btn-success" type="submit">Create</button>
