@@ -129,7 +129,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 
 		if r.Form["content"] == nil ||
 			r.Form["title"] == nil ||
-			r.Form["collectionID"] == nil{
+			r.Form["collectionID"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}else {
@@ -155,14 +155,20 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			err = models.UpdatePostById(id, title, content)
+			var updatePost = map[string]interface{}{}
+			updatePost["Collection"] = collection
+			updatePost["CollectionID"] = collection.ID
+			updatePost["Title"] = title
+			updatePost["Content"] = content
+
+			err = models.UpdatePostById(id, updatePost)
 
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 
-			http.Redirect(w, r, "/post/edit/" + id, http.StatusSeeOther)
+			http.Redirect(w, r, "/post/edit/" + id + "/", http.StatusSeeOther)
 			return
 		}
 	}else if r.Method == "GET" {
@@ -178,10 +184,21 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
+		collections, err := models.FindAllCollections()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		var pageQuery = map[string]interface{}{}
+		pageQuery["post"] = post
+		pageQuery["collections"] = collections
 
 		pageContent := PageContent{
 			PageTitle: "Edit Post",
-			PageQuery: post,
+			PageQuery: pageQuery,
+			IsUser: isUser,
 			CsrfTag: csrf.TemplateField(r)}
 
 		index := path.Join("templates/posts", "edit.html")

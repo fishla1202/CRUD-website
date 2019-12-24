@@ -37,11 +37,9 @@ func FindPostByUserId(userID uint) ([]Post, error){
 	return post, DB.Find(&post, Post{UserID: userID}).Error
 }
 
-// TODO 優化
-func UpdatePostById(id string, title string, content string) error{
+func UpdatePostById(id string, updatePostMap map[string]interface{}) error{
 	var post Post
-	return DB.Model(&post).Where("id = ?", id).Update(
-		map[string]interface{}{"title": title, "content": content}).Error
+	return DB.Model(&post).Where("id = ?", id).Update(updatePostMap).Error
 }
 
 func DeletePostById(id string) error{

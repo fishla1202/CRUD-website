@@ -39,8 +39,7 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
 
 	index := path.Join("templates/users", "index.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)
-
-
+	return
 }
 
 

@@ -3,19 +3,23 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="postTitle">Title</label>
-                <input type="text" class="form-control" name="title" id="postTitle" placeholder="Post title" value="{{.PageQuery.Title}}" required>
+                <input type="text" class="form-control" name="title" id="postTitle" placeholder="Post title" value="{{.PageQuery.post.Title}}" required>
             </div>
         </div>
         <div class="form-group">
             <label for="postContent">Content</label>
-            <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required>{{.PageQuery.Content}}</textarea>
+            <textarea class="form-control" name="content" id="postContent" placeholder="write the post content" required>{{.PageQuery.post.Content}}</textarea>
             <input type="hidden" value="{{.PageQuery.ID}}" name="id">
         </div>
         <div class="form-group">
             <label for="postContent">Collection</label>
             <select class="form-control form-control-sm" name="collectionID">
-                {{range $k, $val := .PageQuery}}
-                    <option value="{{$val.ID}}">{{$val.Title}}</option>
+                {{range $k, $val := .PageQuery.collections}}
+                    {{if eq $val.Title $.PageQuery.post.Collection.Title}}
+                    <option value="{{$val.ID}}" selected>{{$val.Title}}</option>
+                    {{else}}
+                        <option value="{{$val.ID}}">{{$val.Title}}</option>
+                    {{end}}
                 {{end}}
             </select>
         </div>
