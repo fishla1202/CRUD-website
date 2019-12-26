@@ -1,6 +1,18 @@
-<h3>專案內容</h3>
-為了自學Golang所寫的 論壇功能 網站 搭配 bootstrap 4 Golang 1.12.7 (開發中)<br>
-專案目錄架構 以MVC當主架構 因為網路上太多Golang框架 也沒有一個主流框架<br>
-加上此專案只是為了自學GO 所開發的專案 所以檔案目錄就沒有太講究了<br>
-主要知道檔案該放在哪個位置就可以了<br>
-此專案以Goland 當作ide 開發
+<h2>專案說明</h2>
+***
+為了自學Golang所寫的簡易CRUD網站 文件目錄架構採用MVC 此專案以Goland 當作ide 開發
+<h2>使用到的技術</h2>
+***
+* Golang 1.12.7
+* bootstrap 4
+* Firebase Authentication
+
+<h2>外部套件</h2>
+***
+* godotenv
+* gorm
+* go-sql-driver/mysql
+* firebase.google.com/go
+* gorilla/mux
+* gorilla/sessions
+* gorilla/csrf
