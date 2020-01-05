@@ -11,6 +11,7 @@ type Post struct {
 	UserID     uint
 	CollectionID     uint
 	Collection Collection
+	Comments []Comments
 }
 
 

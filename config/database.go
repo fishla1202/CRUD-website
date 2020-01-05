@@ -31,4 +31,5 @@ func MigrateAndPassDatabaseConnectionToModels(db *gorm.DB) {
 	models.InitPostTable()
 	models.InitUserTable()
 	models.InitCollectionTable()
+	models.InitCommentTable()
 }
