@@ -76,7 +76,7 @@ func CreateUser(userName string, userEmail string, userPwd string) (string, bool
 	return u.UID, true
 }
 
-func FindUserByID(id string) (User, error){
+func FindUserByID(id uint) (User, error){
 
 	var user User
 	return user, DB.Find(&user, id).Error

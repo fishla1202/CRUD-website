@@ -28,6 +28,7 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 		PageTitle: post.Title,
 		PageQuery: post,
 		IsUser: isUser,
+		CsrfTag: csrf.TemplateField(r),
 	}
 
 	index := path.Join("templates/posts", "detail.html")

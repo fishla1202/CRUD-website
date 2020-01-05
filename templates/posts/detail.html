@@ -2,4 +2,44 @@
         <h2>Title: {{.PageQuery.Title}}</h2>
         <p>Content: {{.PageQuery.Content}}</p>
         <p>Collection: {{.PageQuery.Collection.Title}}</p>
+        <hr/>
+        <h2>Comments</h2>
+        {{range $k, $val := .PageQuery.Comments}}
+                <p>{{$val.User.Name}}: </p>
+                <p>{{$val.Content}}</p>
+        {{end}}
+        {{if .IsUser}}
+        <form id="addComment" method="POST">
+                <div class="form-group">
+                        <label for="postContent">Content</label>
+                        <textarea class="form-control" name="content" id="commentContent" placeholder="write the post comment" required></textarea>
+                </div>
+                <input type="hidden" name="postID" value="{{.PageQuery.ID}}">
+                {{ .CsrfTag }}
+                <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
+        {{end}}
+{{end}}
+
+{{define "script"}}
+<script>
+        $("#addComment").submit(function( event ) {
+                event.preventDefault();
+                url = window.location.origin + '/comment/create/';
+                $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                                "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
+                        },
+                        data: $(this).serialize(),
+                        success: function(response) {
+                                location.reload();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                                alert(thrownError);
+                        }
+                });
+        });
+</script>
 {{end}}

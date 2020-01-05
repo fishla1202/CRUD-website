@@ -26,6 +26,10 @@ func Main() {
 	p.HandleFunc("/delete/{id:[0-9]+}/", controller.DeletePost).Methods("GET").Name("deletePost")
 	p.HandleFunc("/edit/{id:[0-9]+}/", controller.EditPost).Methods("GET", "POST").Name("editPost")
 
+	// comment
+	pc := r.PathPrefix("/comment").Subrouter()
+	pc.HandleFunc("/create/", controller.CreateComment).Methods("POST").Name("createComment")
+
 	// user
 	u := r.PathPrefix("/user").Subrouter()
 	u.HandleFunc("/dashboard/", controller.UserIndex).Name("userIndex")

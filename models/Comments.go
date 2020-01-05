@@ -9,12 +9,16 @@ type Comments struct {
 	UserID	uint `gorm:"not null"`
 	User	User
 	PostID 	uint `gorm:"not null"`
-	Posts 	Post
+	Post 	Post
 	UpdatedAt *time.Time
 	CreatedAt *time.Time
 }
 
 
 func InitCommentTable() {
-	DB.AutoMigrate(&Post{})
+	DB.AutoMigrate(&Comments{})
+}
+
+func CreateComment(comment *Comments) error{
+	return DB.Create(comment).Error
 }

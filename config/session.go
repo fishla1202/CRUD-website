@@ -90,7 +90,6 @@ func cleanSession(w http.ResponseWriter, r *http.Request){
 }
 
 func CheckSessionCookie(w http.ResponseWriter, r *http.Request) bool{
-	defer r.Body.Close()
 
 	// Get the ID token sent by the client
 	session, _ := Store.Get(r, "user-info")

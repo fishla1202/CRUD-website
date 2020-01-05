@@ -30,7 +30,7 @@ func FindAllPosts() ([]Post, error){
 
 func FindPostById(id string) (Post, error){
 	var post Post
-	return post, DB.Preload("Collection").Find(&post, id).Error
+	return post, DB.Preload("Collection").Preload("Comments").Preload("Comments.User").Find(&post, id).Error
 }
 
 func FindPostByUserId(userID uint) ([]Post, error){
