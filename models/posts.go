@@ -8,8 +8,8 @@ type Post struct {
 	gorm.Model
 	Title      string `gorm:"not null"`
 	Content    string `sql:"type:text;"gorm:"not null"`
-	UserID     uint
-	CollectionID     uint
+	UserID     uint	`gorm:"not null"`
+	CollectionID     uint `gorm:"not null"`
 	Collection Collection
 	Comments []Comments
 }
