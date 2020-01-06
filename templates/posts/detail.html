@@ -8,6 +8,9 @@
                 <p>{{$val.User.Name}}: </p>
                 <p>{{$val.Content}}</p>
         {{end}}
+        <div id="newComment">
+
+        </div>
         {{if .IsUser}}
         <form id="addComment" method="POST">
                 <div class="form-group">
@@ -34,7 +37,7 @@
                         },
                         data: $(this).serialize(),
                         success: function(response) {
-                                location.reload();
+                                $('#newComment').append("<p>New Comment:</p><p>" + $('#commentContent').val() + "</p>")
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
                                 alert(thrownError);
