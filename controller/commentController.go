@@ -73,6 +73,6 @@ func CreateComment(w http.ResponseWriter, r *http.Request){
 			return
 		}
 	}else{
-		responseWithJson(w, http.StatusMethodNotAllowed, "123")
+		responseWithJson(w, http.StatusMethodNotAllowed, "Method not allowed")
 	}
 }
