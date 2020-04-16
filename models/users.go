@@ -4,7 +4,6 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
 	"log"
@@ -23,15 +22,13 @@ type User struct {
 	CreatedAt *time.Time
 }
 
-var DB *gorm.DB
-
 func InitUserTable() {
-	DB.AutoMigrate(&User{})
+	db.AutoMigrate(&User{})
 }
 
 func InsertUser(name string, email string, uid string) bool{
 	user := User{Name: name, Email: email, Uid: uid}
-	res := DB.Create(&user)
+	res := db.Create(&user)
 	if res.Error != nil {
 		return false
 	}
@@ -79,13 +76,13 @@ func CreateUser(userName string, userEmail string, userPwd string) (string, bool
 func FindUserByID(id uint) (User, error){
 
 	var user User
-	return user, DB.Find(&user, id).Error
+	return user, db.Find(&user, id).Error
 }
 
 
 func FindUserIDByUID(uid string) (uint, error){
 	var user User
-	userId := DB.Select("id").Find(&user, User{Uid: uid})
+	userId := db.Select("id").Find(&user, User{Uid: uid})
 	if userId.Error != nil {
 		return user.ID, userId.Error
 	}

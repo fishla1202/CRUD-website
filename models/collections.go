@@ -13,19 +13,19 @@ type Collection struct {
 
 
 func InitCollectionTable() {
-	DB.AutoMigrate(&Collection{})
+	db.AutoMigrate(&Collection{})
 }
 
 func CreateCollection(collection *Collection) error{
-	return DB.Create(&collection).Error
+	return db.Create(&collection).Error
 }
 
 func FindAllCollections() ([]Collection, error){
 	var collections []Collection
-	return collections, DB.Find(&collections).Error
+	return collections, db.Find(&collections).Error
 }
 
 func FindCollectionByID(id string) (Collection, error){
 	var collection Collection
-	return collection, DB.Find(&collection, id).Error
+	return collection, db.Find(&collection, id).Error
 }

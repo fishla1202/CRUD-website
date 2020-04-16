@@ -16,9 +16,9 @@ type Comments struct {
 
 
 func InitCommentTable() {
-	DB.AutoMigrate(&Comments{})
+	db.AutoMigrate(&Comments{})
 }
 
 func CreateComment(comment *Comments) error{
-	return DB.Create(comment).Error
+	return db.Create(comment).Error
 }
