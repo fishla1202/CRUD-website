@@ -1,11 +1,17 @@
 {{define "content"}}
-    <div class="list-group">
+    <div class="my-3 p-3 bg-white rounded shadow-sm mt-5">
+        <h6 class="border-bottom border-gray pb-2 mb-0">All posts</h6>
         {{range $k, $val := .PageQuery}}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="/post/{{$val.ID}}/"> {{$val.Title}}</a>
-                <a href="/post/edit/{{$val.ID}}/" target="_blank"><span class="badge badge-primary badge-pill"><i class="fas fa-edit"></i></span></a>
-                <a href="/post/delete/{{$val.ID}}/"><span class="badge badge-danger badge-pill"><i class="fas fa-trash-alt"></i></span></a>
-            </li>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
+                    <a href="/post/{{$val.ID}}/"> {{$val.Title}}</a>
+                    <a href="/post/delete/{{$val.ID}}/" class="float-right" onclick="return confirm('Are you sure?')"><span class="badge badge-danger badge-pill"><i class="fas fa-trash-alt"></i></span></a>
+                    <a href="/post/edit/{{$val.ID}}/" target="_blank" class="float-right"><span class="badge badge-primary badge-pill"><i class="fas fa-edit"></i></span></a>
+                </p>
+            </div>
         {{end}}
+        <small class="d-block text-right mt-3">
+            <a href="#">All updates</a>
+        </small>
     </div>
 {{end}}
