@@ -70,12 +70,9 @@
     <div class="container-fill">
         <div class="d-none d-xl-block col-xl-2 bd-toc mt-5" aria-label="Secondary navigation">
             <ul class="section-nav pl-0">
-                <li class="toc-entry toc-h2"><a href="#about">About</a></li>
-                <li class="toc-entry toc-h2"><a href="#border-spinner">Border spinner</a></li>
-                <li class="toc-entry toc-h2"><a href="#growing-spinner">Growing spinner</a></li>
-                <li class="toc-entry toc-h2"><a href="#alignment">Alignment</a></li>
-                <li class="toc-entry toc-h2"><a href="#size">Size</a></li>
-                <li class="toc-entry toc-h2"><a href="#buttons">Buttons</a></li>
+                {{range $k, $val := .Collections}}
+                <li class="toc-entry toc-h2"><a href="#about">{{$val.Title}}</a></li>
+                {{end}}
             </ul>
         </div>
         {{block "content" .}}
