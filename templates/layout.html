@@ -3,44 +3,62 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+    </style>
     {{block "style" .}}{{end}}
     <meta charset="UTF-8">
     <title>
         {{.PageTitle}}
     </title>
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Discuss</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<body class="bg-light" data-gr-c-s-loaded="true">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <a class="navbar-brand mr-auto mr-lg-0" href="/">D</a>
+    <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            {{if .IsUser}}
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/user/dashboard/">Dashboard</a>
             </li>
-            {{end}}
+                {{if .IsUser}}
+                <li class="nav-item">
+                    <a href="/post/create/" class="nav-link">Create post</a>
+                </li>
+                {{end}}
+{{/*            <li class="nav-item">*/}}
+{{/*                <a class="nav-link" href="#">Profile</a>*/}}
+{{/*            </li>*/}}
+{{/*            <li class="nav-item dropdown">*/}}
+{{/*                <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>*/}}
+{{/*                <div class="dropdown-menu" aria-labelledby="dropdown01">*/}}
+{{/*                    <a class="dropdown-item" href="#">Action</a>*/}}
+{{/*                    <a class="dropdown-item" href="#">Another action</a>*/}}
+{{/*                    <a class="dropdown-item" href="#">Something else here</a>*/}}
+{{/*                </div>*/}}
+{{/*            </li>*/}}
         </ul>
         <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             {{if .IsUser}}
-                <a href="/post/create/" class="btn btn-outline-success my-2 my-sm-0">Create Post</a>
-                <a href="/user/sign-out/" id="signOut" class="btn btn-outline-success my-2 my-sm-0 ml-1">Sign Out</a>
+            <a href="/user/sign-out/" id="signOut" class="btn btn-outline-success my-2 my-sm-0 ml-1">Sign out</a>
             {{else}}
-                <a href="/user/login/" id="login" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+                <a href="/user/login/" id="login" class="btn btn-outline-success ml-1 my-2 my-sm-0">Sign in</a>
                 <a href="/user/sign-up/" id="signOut" class="btn btn-outline-success my-2 my-sm-0 ml-1">Sign up</a>
             {{end}}
         </form>
     </div>
 </nav>
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-md-12">
-            {{block "content" .}}{{end}}
-        </div>
-    </div>
-</div>
+<main role="main" class="container mb-5">
+    {{block "content" .}}
+    {{end}}
+</main>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>

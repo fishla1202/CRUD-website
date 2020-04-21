@@ -10,6 +10,7 @@ type Post struct {
 	Content    string `sql:"type:text;"gorm:"not null"`
 	UserID     uint	`gorm:"not null"`
 	CollectionID     uint `gorm:"not null"`
+	User User
 	Collection Collection
 	Comments []Comments
 }
@@ -25,7 +26,7 @@ func InsertPost(postContent *Post) error{
 
 func FindAllPosts() ([]Post, error){
 	var postsArray []Post
-	return postsArray, db.Preload("Collection").Find(&postsArray).Error
+	return postsArray, db.Preload("Collection").Preload("User").Find(&postsArray).Error
 }
 
 func FindPostById(id string) (Post, error){
