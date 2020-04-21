@@ -7,6 +7,17 @@
         body {
             padding-top: 56px;
         }
+        .bd-toc {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 4rem;
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .container-fill {
+            display: flex;
+            justify-content: space-around;
+        }
     </style>
     {{block "style" .}}{{end}}
     <meta charset="UTF-8">
@@ -56,8 +67,20 @@
     </div>
 </nav>
 <main role="main" class="container mb-5">
-    {{block "content" .}}
-    {{end}}
+    <div class="container-fill">
+        <div class="d-none d-xl-block col-xl-2 bd-toc mt-5" aria-label="Secondary navigation">
+            <ul class="section-nav pl-0">
+                <li class="toc-entry toc-h2"><a href="#about">About</a></li>
+                <li class="toc-entry toc-h2"><a href="#border-spinner">Border spinner</a></li>
+                <li class="toc-entry toc-h2"><a href="#growing-spinner">Growing spinner</a></li>
+                <li class="toc-entry toc-h2"><a href="#alignment">Alignment</a></li>
+                <li class="toc-entry toc-h2"><a href="#size">Size</a></li>
+                <li class="toc-entry toc-h2"><a href="#buttons">Buttons</a></li>
+            </ul>
+        </div>
+        {{block "content" .}}
+        {{end}}
+    </div>
 </main>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
