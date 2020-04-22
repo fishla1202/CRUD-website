@@ -6,7 +6,7 @@ import (
 
 type Collection struct {
 	gorm.Model
-	Title string `gorm:"not null"`
+	Title string `gorm:"not null;unique_index"`
 	Description string `sql:"type:text;"gorm:"not null"`
 	Posts []Post
 }
