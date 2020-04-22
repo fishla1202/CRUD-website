@@ -33,11 +33,10 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Return error if the sign-in is older than 5 minutes.
-	if  float64(time.Now().Unix())-decoded.Claims["auth_time"].(float64) > 5*60 {
+	if float64(time.Now().Unix())-decoded.Claims["auth_time"].(float64) > 5*60 {
 		http.Error(w, "Recent sign-in required", http.StatusUnauthorized)
 		return
 	}
-
 
 	cookie, err := Client.SessionCookie(r.Context(), userLoginInfo["idToken"], expiresIn)
 	if err != nil {
@@ -67,16 +66,18 @@ func SetLoginSession(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"status": "success"}`))
 }
 
-func getIDTokenFromBody(r *http.Request) (map[string]string, error){
+func getIDTokenFromBody(r *http.Request) (map[string]string, error) {
 	err := r.ParseForm()
-	if err != nil {return nil, err}
-	userLoginInfo := map[string]string {}
+	if err != nil {
+		return nil, err
+	}
+	userLoginInfo := map[string]string{}
 	userLoginInfo["idToken"] = r.Form["idToken"][0]
 	userLoginInfo["uid"] = r.Form["uid"][0]
 	return userLoginInfo, nil
 }
 
-func cleanSession(w http.ResponseWriter, r *http.Request){
+func cleanSession(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := Store.Get(r, "user-info")
 	session.Values["sessionCookie"] = nil
@@ -89,7 +90,7 @@ func cleanSession(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func CheckSessionCookie(w http.ResponseWriter, r *http.Request) bool{
+func CheckSessionCookie(w http.ResponseWriter, r *http.Request) bool {
 
 	// Get the ID token sent by the client
 	session, _ := Store.Get(r, "user-info")

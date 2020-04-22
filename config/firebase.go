@@ -17,7 +17,8 @@ func InitFirebaseClient() {
 	ctx := context.Background()
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
-		log.Fatal("error initializing app:", err)}
+		log.Fatal("error initializing app:", err)
+	}
 
 	Client, err = app.Auth(ctx)
 	if err != nil {

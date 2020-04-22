@@ -5,8 +5,11 @@
             <div class="media text-muted pt-3">
                 <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
                     <a href="/post/{{$val.ID}}/"> {{$val.Title}}</a>
-                    <a href="/post/delete/{{$val.ID}}/" class="float-right" onclick="return confirm('Are you sure?')"><span class="badge badge-danger badge-pill"><i class="fas fa-trash-alt"></i></span></a>
-                    <a href="/post/edit/{{$val.ID}}/" target="_blank" class="float-right"><span class="badge badge-primary badge-pill"><i class="fas fa-edit"></i></span></a>
+                    <a href="/post/delete/{{$val.ID}}/" class="float-right"
+                       onclick="return confirm('Are you sure?')"><span class="badge badge-danger badge-pill"><i
+                                    class="fas fa-trash-alt"></i></span></a>
+                    <a href="/post/edit/{{$val.ID}}/" target="_blank" class="float-right"><span
+                                class="badge badge-primary badge-pill"><i class="fas fa-edit"></i></span></a>
                 </p>
             </div>
         {{end}}

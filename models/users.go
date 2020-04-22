@@ -13,11 +13,11 @@ import (
 )
 
 type User struct {
-	ID uint `gorm:"PRIMARY_KEY"`
-	Name string `gorm:"not null"`
-	Email string `gorm:"not null;index:email_idx"`
-	Uid string `gorm:"unique;not null;index:uid_idx"`
-	Posts []Post
+	ID        uint   `gorm:"PRIMARY_KEY"`
+	Name      string `gorm:"not null"`
+	Email     string `gorm:"not null;index:email_idx"`
+	Uid       string `gorm:"unique;not null;index:uid_idx"`
+	Posts     []Post
 	UpdatedAt *time.Time
 	CreatedAt *time.Time
 }
@@ -26,7 +26,7 @@ func InitUserTable() {
 	db.AutoMigrate(&User{})
 }
 
-func InsertUser(name string, email string, uid string) bool{
+func InsertUser(name string, email string, uid string) bool {
 	user := User{Name: name, Email: email, Uid: uid}
 	res := db.Create(&user)
 	if res.Error != nil {
@@ -35,7 +35,7 @@ func InsertUser(name string, email string, uid string) bool{
 	return true
 }
 
-func CreateUser(userName string, userEmail string, userPwd string) (string, bool){
+func CreateUser(userName string, userEmail string, userPwd string) (string, bool) {
 	opt := option.WithCredentialsFile(path.Join("secret", os.Getenv("FIREBASE_KEY_PATH")))
 	ctx := context.Background()
 	app, err := firebase.NewApp(ctx, nil, opt)
@@ -66,21 +66,20 @@ func CreateUser(userName string, userEmail string, userPwd string) (string, bool
 	log.Printf("Successfully created user: %v\n", u)
 	isCreated := InsertUser(userName, userEmail, u.UID)
 
-	if !isCreated{
+	if !isCreated {
 		return "Fail to create user for db", false
 	}
 
 	return u.UID, true
 }
 
-func FindUserByID(id uint) (User, error){
+func FindUserByID(id uint) (User, error) {
 
 	var user User
 	return user, db.Find(&user, id).Error
 }
 
-
-func FindUserIDByUID(uid string) (uint, error){
+func FindUserIDByUID(uid string) (uint, error) {
 	var user User
 	userId := db.Select("id").Find(&user, User{Uid: uid})
 	if userId.Error != nil {
@@ -88,5 +87,3 @@ func FindUserIDByUID(uid string) (uint, error){
 	}
 	return user.ID, nil
 }
-
-

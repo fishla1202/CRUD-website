@@ -1,49 +1,54 @@
 {{define "content"}}
-        {{template "sidebar" .}}
+    {{template "sidebar" .}}
+    <div class="w-100">
         <h2>Title: {{.PageQuery.Title}}</h2>
         <p>Content: {{.PageQuery.Content}}</p>
         <p>Collection: {{.PageQuery.Collection.Title}}</p>
         <hr/>
         <h2>Comments</h2>
         {{range $k, $val := .PageQuery.Comments}}
-                <p>{{$val.User.Name}}: </p>
-                <p>{{$val.Content}}</p>
+            <p>{{$val.User.Name}}: </p>
+            <p>{{$val.Content}}</p>
         {{end}}
         <div id="newComment">
 
         </div>
         {{if .IsUser}}
-        <form id="addComment" method="POST">
+            <form id="addComment" method="POST">
                 <div class="form-group">
-                        <label for="postContent">Content</label>
-                        <textarea class="form-control" name="content" id="commentContent" placeholder="write the post comment" required></textarea>
+                    <label for="postContent">Content</label>
+                    <textarea class="form-control" name="content" id="commentContent"
+                              placeholder="write the post comment" required></textarea>
                 </div>
                 <input type="hidden" name="postID" value="{{.PageQuery.ID}}">
                 {{ .CsrfTag }}
                 <button type="submit" class="btn btn-primary">Comment</button>
-        </form>
+            </form>
         {{end}}
+    </div>
 {{end}}
 
 {{define "script"}}
-<script>
-        $("#addComment").submit(function( event ) {
-                event.preventDefault();
-                url = window.location.origin + '/comment/create/';
-                $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {
-                                "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
-                        },
-                        data: $(this).serialize(),
-                        success: function(response) {
-                                $('#newComment').append("<p>New Comment:</p><p>" + $('#commentContent').val() + "</p>")
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                                alert(thrownError);
-                        }
-                });
+    <script>
+        const commentAreaElement = $("#commentContent")
+        $("#addComment").submit(function (event) {
+            event.preventDefault();
+            url = window.location.origin + '/comment/create/';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    "X-CSRF-Token": document.getElementsByName("gorilla.csrf.Token")[0].value
+                },
+                data: $(this).serialize(),
+                success: function (response) {
+                    $('#newComment').append("<p>New Comment:</p><p>" + commentAreaElement.val() + "</p>");
+                    commentAreaElement.val("");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
         });
-</script>
+    </script>
 {{end}}

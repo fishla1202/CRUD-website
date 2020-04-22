@@ -8,7 +8,6 @@ import (
 	"path"
 )
 
-
 func IndexHandle(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	isUser := config.CheckSessionCookie(w, r)

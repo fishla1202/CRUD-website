@@ -6,11 +6,11 @@ import (
 )
 
 type PageContent struct {
-	PageTitle string
-	PageQuery interface{}
-	CsrfTag template.HTML
-	IsUser bool
-	Collections [] models.Collection
+	PageTitle   string
+	PageQuery   interface{}
+	CsrfTag     template.HTML
+	IsUser      bool
+	Collections []models.Collection
 }
 
 func newPageContent() *PageContent {

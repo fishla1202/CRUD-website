@@ -6,26 +6,25 @@ import (
 
 type Collection struct {
 	gorm.Model
-	Title string `gorm:"not null;unique_index"`
+	Title       string `gorm:"not null;unique_index"`
 	Description string `sql:"type:text;"gorm:"not null"`
-	Posts []Post
+	Posts       []Post
 }
-
 
 func InitCollectionTable() {
 	db.AutoMigrate(&Collection{})
 }
 
-func CreateCollection(collection *Collection) error{
+func CreateCollection(collection *Collection) error {
 	return db.Create(&collection).Error
 }
 
-func FindAllCollections() ([]Collection, error){
+func FindAllCollections() ([]Collection, error) {
 	var collections []Collection
 	return collections, db.Find(&collections).Error
 }
 
-func FindCollectionByID(id string) (Collection, error){
+func FindCollectionByID(id string) (Collection, error) {
 	var collection Collection
 	return collection, db.Find(&collection, id).Error
 }

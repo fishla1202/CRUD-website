@@ -28,7 +28,7 @@ func CreateCollection(w http.ResponseWriter, r *http.Request) {
 		if r.Form["title"] == nil || r.Form["description"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
-		}else {
+		} else {
 			collection := models.Collection{
 				Title:       r.Form["title"][0],
 				Description: r.Form["description"][0],
@@ -43,17 +43,17 @@ func CreateCollection(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-	}else if r.Method == "GET" {
+	} else if r.Method == "GET" {
 
 		pageContent := PageContent{
 			PageTitle: "Create Collection",
-			CsrfTag: csrf.TemplateField(r),
-			IsUser: isUser,
+			CsrfTag:   csrf.TemplateField(r),
+			IsUser:    isUser,
 		}
 		index := path.Join("templates/collections", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 		return
-	}else {
+	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}

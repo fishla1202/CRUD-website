@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-
 func responseWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
 	w.Header().Set("Content-Type", "application/json")
@@ -16,8 +15,7 @@ func responseWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-
-func CreateComment(w http.ResponseWriter, r *http.Request){
+func CreateComment(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	isUser := config.CheckSessionCookie(w, r)
 
@@ -34,13 +32,12 @@ func CreateComment(w http.ResponseWriter, r *http.Request){
 			return
 		}
 
-		if r.Form["content"] == nil || r.Form["postID"] == nil{
+		if r.Form["content"] == nil || r.Form["postID"] == nil {
 			responseWithJson(w, http.StatusBadRequest, "Missing required args")
 			return
-		}else {
+		} else {
 			session, _ := config.Store.Get(r, "user-info")
 			userId := session.Values["userId"]
-
 
 			post, err := models.FindPostById(r.Form["postID"][0])
 
@@ -57,10 +54,10 @@ func CreateComment(w http.ResponseWriter, r *http.Request){
 
 			comment := models.Comments{
 				Content: r.Form["content"][0],
-				UserID: userId.(uint),
-				User: user,
-				PostID: post.ID,
-				Post: post,
+				UserID:  userId.(uint),
+				User:    user,
+				PostID:  post.ID,
+				Post:    post,
 			}
 
 			err = models.CreateComment(&comment)
@@ -72,7 +69,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request){
 			responseWithJson(w, http.StatusCreated, "Comment is created")
 			return
 		}
-	}else{
+	} else {
 		responseWithJson(w, http.StatusMethodNotAllowed, "Method not allowed")
 	}
 }

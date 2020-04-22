@@ -39,17 +39,17 @@
                     idToken: idToken,
                     uid: uid
                 },
-                success: function(response) {
+                success: function (response) {
                     // alert(response);
                     window.location.assign('/user/dashboard/');
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     alert(xhr.status);
                 }
             });
         }
 
-        $( "#loginUserForm" ).submit(function( event ) {
+        $("#loginUserForm").submit(function (event) {
             event.preventDefault();
             const submitBtn = $("#submit_btn");
             submitBtn.prop("disabled", true);
@@ -71,7 +71,7 @@
                 return firebase.auth().currentUser.getIdToken().then(idToken => {
                     // Session login endpoint is queried and the session cookie is set.
                     return postIdTokenToSessionLogin(idToken, user.user.uid)
-            });
+                });
             }).then(() => {
                 // A page redirect would suffice as the persistence is set to NONE.
                 return firebase.auth().signOut();

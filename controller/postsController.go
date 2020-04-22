@@ -10,7 +10,6 @@ import (
 	"path"
 )
 
-
 func PostDetail(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	isUser := config.CheckSessionCookie(w, r)
@@ -52,12 +51,12 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 		if r.Form["content"] == nil ||
 			r.Form["title"] == nil ||
-			r.Form["collectionID"] == nil{
+			r.Form["collectionID"] == nil {
 
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 
-		}else {
+		} else {
 			session, _ := config.Store.Get(r, "user-info")
 			userId := session.Values["userId"]
 
@@ -69,11 +68,11 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			}
 
 			post := models.Post{
-				Title:   r.Form["title"][0],
-				Content: r.Form["content"][0],
-				UserID: userId.(uint),
+				Title:        r.Form["title"][0],
+				Content:      r.Form["content"][0],
+				UserID:       userId.(uint),
 				CollectionID: collection.ID,
-				Collection: collection,
+				Collection:   collection,
 			}
 
 			err = models.InsertPost(&post)
@@ -85,7 +84,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-	}else if r.Method == "GET" {
+	} else if r.Method == "GET" {
 
 		collections, err := models.FindAllCollections()
 
@@ -97,13 +96,13 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		pageContent := PageContent{
 			PageTitle: "Create Post",
 			PageQuery: collections,
-			CsrfTag: csrf.TemplateField(r),
-			IsUser: isUser,
+			CsrfTag:   csrf.TemplateField(r),
+			IsUser:    isUser,
 		}
 		index := path.Join("templates/posts", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 		return
-	}else {
+	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -124,14 +123,16 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	if r.Method == "POST" {
 		err := r.ParseForm()
-		if err != nil { http.Error(w, err.Error(), http.StatusInternalServerError)}
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 
 		if r.Form["content"] == nil ||
 			r.Form["title"] == nil ||
 			r.Form["collectionID"] == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
-		}else {
+		} else {
 			post, err := models.FindPostById(id)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -167,10 +168,10 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			http.Redirect(w, r, "/post/" + id + "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/post/"+id+"/", http.StatusSeeOther)
 			return
 		}
-	}else if r.Method == "GET" {
+	} else if r.Method == "GET" {
 		post, err := models.FindPostById(id)
 
 		if err != nil {
@@ -197,13 +198,13 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 		pageContent := PageContent{
 			PageTitle: "Edit Post",
 			PageQuery: pageQuery,
-			IsUser: isUser,
-			CsrfTag: csrf.TemplateField(r)}
+			IsUser:    isUser,
+			CsrfTag:   csrf.TemplateField(r)}
 
 		index := path.Join("templates/posts", "edit.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 		return
-	}else {
+	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}

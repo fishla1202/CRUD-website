@@ -49,9 +49,9 @@ func Main() {
 
 	if env == "dev" {
 		csrfMiddleware = csrf.Protect(csrfKey, csrf.Secure(false), csrf.Path("/"))
-	}else if  env == "production"{
+	} else if env == "production" {
 		csrfMiddleware = csrf.Protect(csrfKey)
-	}else {
+	} else {
 		log.Fatal("env app setup error please select type production or dev")
 	}
 	// gorilla csrf token 預設只對同一個route or 子 route有效 https://github.com/gorilla/csrf/issues/32 研究好久才發現

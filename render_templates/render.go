@@ -6,7 +6,6 @@ import (
 	"path"
 )
 
-
 func ReturnRenderTemplate(w http.ResponseWriter,
 	templatePath string,
 	pageContent interface{}) {

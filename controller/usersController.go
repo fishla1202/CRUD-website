@@ -10,7 +10,6 @@ import (
 	"path"
 )
 
-
 func UserIndex(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -42,7 +41,6 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -57,14 +55,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		pageContent := PageContent{
 			PageTitle: "Sign up",
 			PageQuery: nil,
-			CsrfTag: csrf.TemplateField(r),
-			IsUser: isUser,
+			CsrfTag:   csrf.TemplateField(r),
+			IsUser:    isUser,
 		}
 
 		index := path.Join("templates/users", "create.html")
 		render_templates.ReturnRenderTemplate(w, index, &pageContent)
 		return
-	}else if r.Method == "POST" {
+	} else if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -82,7 +80,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(uid)
 		http.Redirect(w, r, "/user/login/", http.StatusSeeOther)
 		return
-	}else {
+	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -100,8 +98,8 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	pageContent := PageContent{
 		PageTitle: "User login",
 		PageQuery: nil,
-		CsrfTag: csrf.TemplateField(r),
-		IsUser: isUser,
+		CsrfTag:   csrf.TemplateField(r),
+		IsUser:    isUser,
 	}
 
 	index := path.Join("templates/users", "login.html")

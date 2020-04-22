@@ -15,11 +15,15 @@ func init() {
 	dbConnectionKeyword := os.Getenv("DB_CONNECTION_KEYWORD")
 	DB, err := gorm.Open(
 		"mysql", dbConnectionKeyword)
-	if err != nil { log.Fatal("connection error:", err) }
+	if err != nil {
+		log.Fatal("connection error:", err)
+	}
 	DB.LogMode(true)
 	DB.DB()
 	err = DB.DB().Ping()
-	if err != nil {log.Fatal("connection error:", err) }
+	if err != nil {
+		log.Fatal("connection error:", err)
+	}
 	DB.DB().SetMaxIdleConns(1000)
 	DB.DB().SetMaxOpenConns(2000)
 	DB.DB().SetConnMaxLifetime(time.Hour)
