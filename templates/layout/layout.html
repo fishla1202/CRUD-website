@@ -7,13 +7,6 @@
         body {
             padding-top: 56px;
         }
-        .bd-toc {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 4rem;
-            height: calc(100vh - 4rem);
-            overflow-y: auto;
-        }
         .container-fill {
             display: flex;
             justify-content: space-around;
@@ -68,13 +61,6 @@
 </nav>
 <main role="main" class="container mb-5">
     <div class="container-fill">
-        <div class="d-none d-xl-block col-xl-2 bd-toc mt-5" aria-label="Secondary navigation">
-            <ul class="section-nav pl-0">
-                {{range $k, $val := .Collections}}
-                <li class="toc-entry toc-h2"><a href="#about">{{$val.Title}}</a></li>
-                {{end}}
-            </ul>
-        </div>
         {{block "content" .}}
         {{end}}
     </div>

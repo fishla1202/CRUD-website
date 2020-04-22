@@ -22,14 +22,12 @@ func PostDetail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	// 當回傳是interface時 需要定義回傳是什麼值才能提取裡面的屬性
-	pageContent := PageContent{
-		PageTitle: post.Title,
-		PageQuery: post,
-		IsUser: isUser,
-		CsrfTag: csrf.TemplateField(r),
-	}
+	pageContent := newPageContent()
+	pageContent.PageTitle = post.Title
+	pageContent.PageQuery = post
+	pageContent.IsUser = isUser
+	pageContent.CsrfTag = csrf.TemplateField(r)
 
 	index := path.Join("templates/posts", "detail.html")
 	render_templates.ReturnRenderTemplate(w, index, &pageContent)

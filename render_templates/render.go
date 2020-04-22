@@ -10,9 +10,10 @@ import (
 func ReturnRenderTemplate(w http.ResponseWriter,
 	templatePath string,
 	pageContent interface{}) {
-
-	layout := path.Join("templates", "layout.html")
-	tmpl, err := template.ParseFiles(layout, templatePath)
+	layout := path.Join("templates/layout", "layout.html")
+	sidebar := path.Join("templates/layout", "sidebar.html")
+	postList := path.Join("templates/layout", "post_list.html")
+	tmpl, err := template.ParseFiles(layout, sidebar, postList, templatePath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
