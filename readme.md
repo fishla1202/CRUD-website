@@ -4,7 +4,7 @@
 此專案以Goland 當作ide 開發
 <h2>使用到的技術</h2>
 <ul>
-    <li>Golang 1.12.7</li>
+    <li>Go version go1.14.1</li>
     <li>bootstrap 4</li>
     <li>Firebase Authentication</li>
 </ul>
