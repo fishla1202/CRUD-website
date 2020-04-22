@@ -33,4 +33,5 @@ func FindCollectionByID(id string) (Collection, error){
 func FindCollectionByTitle(title string) (Collection, error) {
 	var collection Collection
 	return collection, db.Find(&collection, Collection{Title: title}).Error
+	// Test string
 }
