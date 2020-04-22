@@ -18,6 +18,7 @@ func Main() {
 	// collections
 	c := r.PathPrefix("/collections").Subrouter()
 	c.HandleFunc("/create/", controller.CreateCollection).Methods("GET", "POST").Name("createCollection")
+	c.HandleFunc("/{collectionTitle}/posts/", controller.SearchCollectionPosts).Methods("GET").Name("searchCollectionPosts")
 
 	// post
 	p := r.PathPrefix("/post").Subrouter()

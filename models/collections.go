@@ -29,3 +29,8 @@ func FindCollectionByID(id string) (Collection, error){
 	var collection Collection
 	return collection, db.Find(&collection, id).Error
 }
+
+func FindCollectionByTitle(title string) (Collection, error) {
+	var collection Collection
+	return collection, db.Find(&collection, Collection{Title: title}).Error
+}

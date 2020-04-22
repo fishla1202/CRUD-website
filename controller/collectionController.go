@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gorilla/csrf"
+	"github.com/gorilla/mux"
 	"golang_side_project_crud_website/config"
 	"golang_side_project_crud_website/models"
 	"golang_side_project_crud_website/render_templates"
@@ -56,4 +57,25 @@ func CreateCollection(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+}
+
+func SearchCollectionPosts(w http.ResponseWriter, r *http.Request) {
+	isUser := config.CheckSessionCookie(w, r)
+	params := mux.Vars(r)
+	collectionTitle := params["collectionTitle"]
+	posts, err := models.FindPostByCollectionTitle(collectionTitle)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	pageContent := newPageContent()
+	pageContent.PageTitle = "Discuss"
+	pageContent.PageQuery = posts
+	pageContent.IsUser = isUser
+
+	index := path.Join("templates", "index.html")
+	render_templates.ReturnRenderTemplate(w, index, &pageContent)
+	return
 }

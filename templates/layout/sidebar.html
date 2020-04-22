@@ -2,7 +2,7 @@
 <div class="d-none d-xl-block col-xl-2 bd-toc mt-5" aria-label="Secondary navigation">
     <ul class="section-nav pl-0">
         {{range $k, $val := .Collections}}
-            <li class="toc-entry toc-h2"><a href="/collection/{{$val.Title}}/posts/">{{$val.Title}}</a></li>
+            <li class="toc-entry toc-h2"><a href="/collections/{{$val.Title}}/posts/">{{$val.Title}}</a></li>
         {{end}}
     </ul>
 </div>

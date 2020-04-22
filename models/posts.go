@@ -34,6 +34,15 @@ func FindPostById(id string) (Post, error){
 	return post, db.Preload("Collection").Preload("Comments").Preload("Comments.User").Find(&post, id).Error
 }
 
+func FindPostByCollectionTitle(collectionTitle string) ([]Post, error) {
+	var posts []Post
+	collection, err := FindCollectionByTitle(collectionTitle)
+	if err != nil {
+		return posts, err
+	}
+	return posts, db.Preload("User").Find(&posts, Post{CollectionID: collection.ID}).Error
+}
+
 func FindPostByUserId(userID uint) ([]Post, error){
 	var post []Post
 	return post, db.Find(&post, Post{UserID: userID}).Error
